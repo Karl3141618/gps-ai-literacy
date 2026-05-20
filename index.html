@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DRC AI Literacy Course</title>
+<title>GPS AI Literacy Course</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -221,7 +221,7 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
 <!-- TOP BAR -->
 <header class="top-bar">
   <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-  <span class="logo-text">DRC AI Literacy</span>
+  <span class="logo-text">GPS AI Literacy</span>
   <div class="top-divider"></div>
   <span class="course-name">Understanding AI: What It Is, How to Use It Well, and What the Rules Are</span>
   <div class="top-progress">
@@ -323,7 +323,7 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
 <!-- WELCOME -->
 <div class="section active" id="s-welcome">
   <div class="welcome-hero">
-    <h1>DRC AI Literacy Course</h1>
+    <h1>GPS AI Literacy Course</h1>
     <p>Welcome. This mandatory course gives you everything you need to use AI tools confidently and responsibly at DRC — what AI is, how to use it ethically, and what European law requires. It takes approximately 15–20 minutes and ends with a certificate that documents your EU AI Act Article 4 compliance.</p>
   </div>
   <div class="ch-cards">
@@ -638,12 +638,12 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
   <!-- Certificate -->
   <div id="cert-step2" style="display:none">
     <div class="cert">
-      <div class="cert-org">Danish Refugee Council</div>
+      <div class="cert-org">GPS unit — Danish Refugee Council</div>
       <div class="cert-title">Certificate of Completion</div>
-      <div class="cert-sub">AI Literacy Course</div>
+      <div class="cert-sub">GPS AI Literacy Course</div>
       <div class="cert-intro">This certifies that</div>
       <div class="cert-name" id="cert-display-name"></div>
-      <div class="cert-confirms">has successfully completed the DRC AI Literacy Course</div>
+      <div class="cert-confirms">has successfully completed the GPS AI Literacy Course</div>
       <div class="cert-fields" id="cert-display-fields"></div>
       <div style="margin:20px 0;padding:14px;background:var(--ghost);border-radius:8px">
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--slate);margin-bottom:6px">Verification code</div>
@@ -863,10 +863,10 @@ async function generateCert() {
 function sendNotification() {
   const d = window._certData;
   if(!d) return;
-  const subject = encodeURIComponent('DRC AI Literacy Course — Completion: ' + d.name);
+  const subject = encodeURIComponent('GPS AI Literacy Course — Completion: ' + d.name);
   const body = encodeURIComponent(
     'Hi Augustin and Raphael,\n\n' +
-    'I have completed the DRC AI Literacy Course.\n\n' +
+    'I have completed the GPS AI Literacy Course.\n\n' +
     'Name: ' + d.name + '\n' +
     'Date: ' + d.dateDisplay + '\n' +
     'Score: ' + d.score + '\n' +
