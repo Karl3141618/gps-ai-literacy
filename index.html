@@ -162,11 +162,11 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
 .quiz-result{display:none;border-radius:10px;padding:26px;margin:22px 0;text-align:center}
 .quiz-result.show{display:block}
 .quiz-result.pass{background:var(--green-light);border:2px solid var(--green)}
-.quiz-result.fail{background:#FEF9E7;border:2px solid #F39C12}
+.quiz-result.fail{background:var(--red-pale);border:2px solid var(--red)}
 .ri{font-size:44px;margin-bottom:10px}
 .rt{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:6px}
 .quiz-result.pass .rt{color:var(--green)}
-.quiz-result.fail .rt{color:#B7770D}
+.quiz-result.fail .rt{color:var(--red-dark)}
 .rs{font-size:14px;color:var(--slate);line-height:1.6}
 
 /* FINAL CERT */
@@ -490,8 +490,8 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
   <h2 class="sh">Video — Energy & data ethics</h2>
   <p class="prose" style="margin-bottom:14px">The hidden environmental and data ethics costs behind every AI response — and what this means for an organisation like DRC.</p>
   <div class="vid-block">
-  <video controls style="width:100%;display:block;border-radius:10px 10px 0 0"><source src="energy_data_ethics.mp4" type="video/mp4"></video>
-    <div class="vid-meta"><span class="vid-badge">Video</span><span class="vid-info">~2 min · Energy & data ethics — produced with NotebookLM</span></div>
+    <div class="vid-placeholder"><div class="vid-placeholder-inner"><div class="vid-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div><div class="vid-label">Chapter 2 · Video</div><div class="vid-title">Energy & data ethics</div></div></div>
+    <div class="vid-meta"><span class="vid-badge">Video</span><span class="vid-info">~2 min · Energy & data ethics — produced with NotebookLM</span><span class="vid-note">Video to be added</span></div>
   </div>
   <div class="complete-wrap"><button class="btn" onclick="complete('c2l7')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
 </div>
@@ -507,7 +507,7 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
   </div>
   <div style="margin-top:24px;display:flex;gap:12px;align-items:center"><button class="btn" id="c2q-submit" onclick="submitQuiz('c2q')" disabled>Submit answers <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span id="c2q-count" style="font-size:13px;color:var(--slate)">0 of 4 answered</span></div>
   <div class="quiz-result" id="c2q-result"><div class="ri" id="c2q-ri"></div><div class="rt" id="c2q-rt"></div><p class="rs" id="c2q-rs"></p><button class="btn" id="c2q-retry" onclick="retryQuiz('c2q',4)" style="display:none;margin-top:14px">Retry incorrect questions</button></div>
-  <div class="comp-banner" id="c2q-banner"><div style="font-size:28px">🎉</div><div><h3>Chapter 2 complete!</h3><p>Well done. Move on to Chapter 3 — The Legal Framework.</p></div><button class="btn" onclick="goTo('c3l1')" style="margin-top:14px">Start Chapter 3 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+  <div class="comp-banner" id="c2q-banner"><div style="font-size:28px">🎉</div><div><h3>Chapter 2 complete!</h3><p>Well done. Move on to Chapter 3 — The Legal Framework.</p></div></div>
 </div>
 
 <!-- C3L1 -->
@@ -546,8 +546,8 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
   <h2 class="sh">Video — Europe vs the world</h2>
   <p class="prose" style="margin-bottom:14px">Why the EU has chosen a strict, rights-based approach to AI regulation — and how it compares to the US, China, and the rest of the world.</p>
   <div class="vid-block">
-    <video controls style="width:100%;display:block;border-radius:10px 10px 0 0"><source src="europe_vs_world.mp4" type="video/mp4"></video>
-    <div class="vid-meta"><span class="vid-badge">Video</span><span class="vid-info">~2 min · Europe vs the world — produced with NotebookLM</span></div>
+    <div class="vid-placeholder"><div class="vid-placeholder-inner"><div class="vid-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div><div class="vid-label">Chapter 3 · Video</div><div class="vid-title">AI regulation: Europe vs the world</div></div></div>
+    <div class="vid-meta"><span class="vid-badge">Video</span><span class="vid-info">~2 min · Europe vs the world — produced with NotebookLM</span><span class="vid-note">Video to be added</span></div>
   </div>
   <div class="complete-wrap"><button class="btn" onclick="complete('c3l3')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
 </div>
@@ -597,7 +597,7 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
   </div>
   <div style="margin-top:24px;display:flex;gap:12px;align-items:center"><button class="btn" id="c3q-submit" onclick="submitQuiz('c3q')" disabled>Submit answers <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span id="c3q-count" style="font-size:13px;color:var(--slate)">0 of 4 answered</span></div>
   <div class="quiz-result" id="c3q-result"><div class="ri" id="c3q-ri"></div><div class="rt" id="c3q-rt"></div><p class="rs" id="c3q-rs"></p><button class="btn" id="c3q-retry" onclick="retryQuiz('c3q',4)" style="display:none;margin-top:14px">Retry incorrect questions</button></div>
-  <div class="comp-banner" id="c3q-banner"><div style="font-size:28px">🎉</div><div><h3>Chapter 3 complete!</h3><p>All chapters done. Time for the final assessment.</p></div><button class="btn" onclick="goTo('final')" style="margin-top:14px">Start Final Assessment <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+  <div class="comp-banner" id="c3q-banner"><div style="font-size:28px">🎉</div><div><h3>Chapter 3 complete!</h3><p>All chapters done. Time for the final assessment.</p></div></div>
 </div>
 
 <!-- FINAL ASSESSMENT -->
@@ -608,12 +608,12 @@ table.ct td:first-child{font-weight:600;color:var(--red-dark)}
     <div class="qblock" id="fq-b1"><div class="qnum">Question 2 of 6</div><div class="qtext">A DRC colleague pastes a safeguarding case note into an AI tool to help draft a summary. This is:</div><div class="opts"><div class="opt" onclick="selOpt('fq',1,0)" id="fq-1-0"><div class="ol">A</div><div class="ot">Acceptable if the AI tool is free and widely used</div></div><div class="opt" onclick="selOpt('fq',1,1)" id="fq-1-1"><div class="ol">B</div><div class="ot">Acceptable if the colleague reviews the output carefully</div></div><div class="opt" onclick="selOpt('fq',1,2)" id="fq-1-2"><div class="ol">C</div><div class="ot">A serious breach of data protection — safeguarding material must never be entered into AI tools</div></div><div class="opt" onclick="selOpt('fq',1,3)" id="fq-1-3"><div class="ol">D</div><div class="ot">Acceptable if the beneficiary's name is removed</div></div></div><div class="expl" id="fq-e1"></div></div>
     <div class="qblock" id="fq-b2"><div class="qnum">Question 3 of 6</div><div class="qtext">Which statement best reflects the accountability principle?</div><div class="opts"><div class="opt" onclick="selOpt('fq',2,0)" id="fq-2-0"><div class="ol">A</div><div class="ot">If AI produces an error in a document, responsibility lies with the AI provider</div></div><div class="opt" onclick="selOpt('fq',2,1)" id="fq-2-1"><div class="ol">B</div><div class="ot">You are accountable for all content you produce, sign, or send — including AI-assisted content</div></div><div class="opt" onclick="selOpt('fq',2,2)" id="fq-2-2"><div class="ol">C</div><div class="ot">AI-generated content should be marked so readers know who is responsible</div></div><div class="opt" onclick="selOpt('fq',2,3)" id="fq-2-3"><div class="ol">D</div><div class="ot">Accountability only applies when the document is shared externally</div></div></div><div class="expl" id="fq-e2"></div></div>
     <div class="qblock" id="fq-b3"><div class="qnum">Question 4 of 6</div><div class="qtext">Article 4 of the EU AI Act applies to DRC because:</div><div class="opts"><div class="opt" onclick="selOpt('fq',3,0)" id="fq-3-0"><div class="ol">A</div><div class="ot">DRC has voluntarily opted into the EU AI Act</div></div><div class="opt" onclick="selOpt('fq',3,1)" id="fq-3-1"><div class="ol">B</div><div class="ot">DRC is headquartered in Denmark, within the EU, and deploys AI systems</div></div><div class="opt" onclick="selOpt('fq',3,2)" id="fq-3-2"><div class="ol">C</div><div class="ot">DRC receives EU funding</div></div><div class="opt" onclick="selOpt('fq',3,3)" id="fq-3-3"><div class="ol">D</div><div class="ot">Article 4 applies globally to all organisations using AI</div></div></div><div class="expl" id="fq-e3"></div></div>
-    <div class="qblock" id="fq-b4"><div class="qnum">Question 5 of 6</div><div class="qtext">A DRC officer uses AI to draft a field report that will be shared externally with partners. Which of the following is required before sending it?</div><div class="opts"><div class="opt" onclick="selOpt('fq',4,0)" id="fq-4-0"><div class="ol">A</div><div class="ot">Send it directly — AI produces accurate, culturally aware outputs</div></div><div class="opt" onclick="selOpt('fq',4,1)" id="fq-4-1"><div class="ol">B</div><div class="ot">Review it carefully for accuracy and bias, AND add a disclosure statement since AI contributed to external content</div></div><div class="opt" onclick="selOpt('fq',4,2)" id="fq-4-2"><div class="ol">C</div><div class="ot">Add a note that it was AI-generated and send it</div></div><div class="opt" onclick="selOpt('fq',4,3)" id="fq-4-3"><div class="ol">D</div><div class="ot">Only review statistics and citations — prose doesn't need checking</div></div></div><div class="expl" id="fq-e4"></div></div>
+    <div class="qblock" id="fq-b4"><div class="qnum">Question 5 of 6</div><div class="qtext">A DRC officer uses AI to draft a field report containing observations about a community in South Sudan. Before sharing the report, they should:</div><div class="opts"><div class="opt" onclick="selOpt('fq',4,0)" id="fq-4-0"><div class="ol">A</div><div class="ot">Send it directly — AI produces accurate, culturally aware outputs</div></div><div class="opt" onclick="selOpt('fq',4,1)" id="fq-4-1"><div class="ol">B</div><div class="ot">Review for cultural accuracy, bias, and factual correctness before sharing</div></div><div class="opt" onclick="selOpt('fq',4,2)" id="fq-4-2"><div class="ol">C</div><div class="ot">Add a note that it was AI-generated and send it</div></div><div class="opt" onclick="selOpt('fq',4,3)" id="fq-4-3"><div class="ol">D</div><div class="ot">Only review statistics and citations — prose doesn't need checking</div></div></div><div class="expl" id="fq-e4"></div></div>
     <div class="qblock" id="fq-b5"><div class="qnum">Question 6 of 6</div><div class="qtext">A DRC colleague sends a donor update primarily drafted using AI, without disclosing this. Which obligations have potentially been violated?</div><div class="opts"><div class="opt" onclick="selOpt('fq',5,0)" id="fq-5-0"><div class="ol">A</div><div class="ot">Article 50 (transparency) only</div></div><div class="opt" onclick="selOpt('fq',5,1)" id="fq-5-1"><div class="ol">B</div><div class="ot">Article 4 (literacy) only</div></div><div class="opt" onclick="selOpt('fq',5,2)" id="fq-5-2"><div class="ol">C</div><div class="ot">Article 50 (transparency) and the accountability principle</div></div><div class="opt" onclick="selOpt('fq',5,3)" id="fq-5-3"><div class="ol">D</div><div class="ot">No obligation — disclosure is only required for published reports</div></div></div><div class="expl" id="fq-e5"></div></div>
   </div>
   <div style="margin-top:24px;display:flex;gap:12px;align-items:center"><button class="btn" id="fq-submit" onclick="submitFinal()" disabled>Submit final assessment <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span id="fq-count" style="font-size:13px;color:var(--slate)">0 of 6 answered</span></div>
   <div class="quiz-result" id="fq-result"><div class="ri" id="fq-ri"></div><div class="rt" id="fq-rt"></div><p class="rs" id="fq-rs"></p><button class="btn" id="fq-retry" onclick="retryFinal()" style="display:none;margin-top:14px">Retry incorrect questions</button></div>
-  <div class="comp-banner" id="fq-banner"><div style="font-size:28px">🏆</div><div><h3>Assessment passed!</h3><p>Proceed to your certificate.</p></div><button class="btn" onclick="goTo('cert')" style="margin-top:14px">Get my certificate <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+  <div class="comp-banner" id="fq-banner"><div style="font-size:28px">🏆</div><div><h3>Assessment passed!</h3><p>Proceed to your certificate.</p></div></div>
 </div>
 
 <!-- CERTIFICATE -->
@@ -700,7 +700,7 @@ const QUIZZES = {
 };
 const FINAL = {
   correct:[1,2,1,1,1,2],pass:5,
-  expl:["LLMs predict text based on statistical patterns from training data — not databases or live sources.","Safeguarding material is among the most sensitive personal data categories. It must never be entered into any external AI tool.","Accountability does not transfer to an AI tool. You are always responsible for what you produce.","The EU AI Act applies to organisations that deploy AI systems within the EU. DRC, headquartered in Copenhagen, falls within scope.","Both human review (for accuracy and bias) AND disclosure are required for AI-assisted content shared externally. Neither step alone is sufficient.","Donor-facing communications are external documents. Article 50 transparency obligations apply, and the accountability principle is also at stake."]
+  expl:["LLMs predict text based on statistical patterns from training data — not databases or live sources.","Safeguarding material is among the most sensitive personal data categories. It must never be entered into any external AI tool.","Accountability does not transfer to an AI tool. You are always responsible for what you produce.","The EU AI Act applies to organisations that deploy AI systems within the EU. DRC, headquartered in Copenhagen, falls within scope.","AI can reflect biases and produce culturally inappropriate content, particularly for underrepresented regions. Full human review is required.","Donor-facing communications are external documents. Article 50 transparency obligations apply, and the accountability principle is also at stake."]
 };
 let qState = {};
 ['c1q','c2q','c3q','fq'].forEach(id=>{ qState[id]={answers:new Array(id==='fq'?6:4).fill(null),submitted:false,retryMode:false,wrong:[]}; });
@@ -785,25 +785,18 @@ function runQuiz(qid,data,total) {
   });
   const tot=s.retryMode?([...Array(total).keys()].filter(i=>!s.wrong.includes(i)||s.answers[i]===data.correct[i])).length:correct;
   s.submitted=true; s.wrong=nw;
-  const allRight=nw.length===0;
-  const res=document.getElementById(qid+'-result');
-  if(allRight){
-    res.className='quiz-result show pass';
-    document.getElementById(qid+'-ri').textContent=total===6?'🏆':'✅';
-    document.getElementById(qid+'-rt').textContent=total===6?'Assessment complete!':'Chapter complete!';
-    document.getElementById(qid+'-rs').textContent=`You got ${tot}/${total} correct. Well done!`;
-    document.getElementById(qid+'-retry').style.display='none';
+  const ok=tot>=data.pass;
+  const res=document.getElementById(qid+'-result'); res.className='quiz-result show '+(ok?'pass':'fail');
+  document.getElementById(qid+'-ri').textContent=ok?(total===6?'🏆':'✅'):'❌';
+  document.getElementById(qid+'-rt').textContent=ok?(total===6?'Assessment passed!':'Well done!'):'Not quite — try again';
+  document.getElementById(qid+'-rs').textContent=ok?`You scored ${tot}/${total}. ${total===6?'Proceed to your certificate.':'Well done.'}`:`You scored ${tot}/${total} — you need ${data.pass} to pass. ${nw.length} question(s) to retry.`;
+  document.getElementById(qid+'-retry').style.display=ok?'none':'inline-flex';
+  if(ok){
     passed[qid]=true; completed[qid]=true;
-    if(qid==='fq') finalScore=tot;
+    if(qid==='fq') finalScore = tot;
     const nav=document.getElementById('nav-'+qid); if(nav){nav.classList.add('done');nav.classList.remove('locked');}
     updateProgress(); updateLocks();
     setTimeout(()=>{ const b=document.getElementById(qid+'-banner'); if(b)b.classList.add('show'); },400);
-  } else {
-    res.className='quiz-result show fail';
-    document.getElementById(qid+'-ri').textContent='📝';
-    document.getElementById(qid+'-rt').textContent=`${tot}/${total} correct`;
-    document.getElementById(qid+'-rs').textContent=`You got ${correct} right out of ${active.length}. ${nw.length} answer${nw.length>1?'s need':'needs'} correcting — they're shown below. Have another go!`;
-    document.getElementById(qid+'-retry').style.display='inline-flex';
   }
 }
 function submitQuiz(qid){ runQuiz(qid,QUIZZES[qid],4); }
@@ -874,7 +867,7 @@ function sendNotification() {
     'Please add me to the Article 4 compliance register.\n\n' +
     'Thank you.'
   );
-  window.location.href = 'mailto:augustin.matjasec@drc.ngo?subject=' + subject + '&body=' + body;
+  window.location.href = 'mailto:augustin.matjasec@drc.ngo,raphael.capony@drc.ngo?subject=' + subject + '&body=' + body;
 }
 
 
