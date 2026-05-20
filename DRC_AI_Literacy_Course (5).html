@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRC AI Literacy Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #C0392B; --red-dark: #922B21; --red-light: #FADBD8; --red-pale: #FEF5F4;
+  --navy: #1A252F; --navy-mid: #2C3E50; --slate: #5D6D7E; --silver: #AEB6BF;
+  --ghost: #F4F6F7; --white: #FFFFFF;
+  --green: #1E8449; --green-light: #D5F5E3;
+  --blue: #1A5276; --blue-light: #EBF5FB;
+  --purple: #6C3483; --purple-light: #F4ECF7;
+  --orange: #D35400; --orange-light: #FDEBD0;
+  --teal: #0E6655; --teal-light: #D1F2EB;
+  --sidebar: 290px; --header: 54px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Sora',sans-serif;background:var(--ghost);color:var(--navy-mid);min-height:100vh;display:flex;flex-direction:column}
+
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;height:var(--header);background:var(--navy);display:flex;align-items:center;padding:0 20px;z-index:200;gap:12px}
+.logo-mark{width:30px;height:30px;background:var(--red);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-mark svg{width:16px;height:16px}
+.logo-text{font-size:11px;font-weight:700;color:var(--white);letter-spacing:.1em;text-transform:uppercase}
+.top-divider{width:1px;height:20px;background:rgba(255,255,255,.15)}
+.course-name{font-size:13px;color:var(--silver)}
+.top-progress{margin-left:auto;display:flex;align-items:center;gap:10px}
+.top-progress-bar{width:120px;height:4px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden}
+.top-progress-fill{height:100%;background:var(--red);border-radius:99px;transition:width .4s}
+.top-progress-text{font-size:12px;color:var(--silver);font-weight:500}
+.top-progress-text span{color:var(--white);font-weight:700}
+
+/* LAYOUT */
+.layout{display:flex;margin-top:var(--header);min-height:calc(100vh - var(--header))}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);min-width:var(--sidebar);background:var(--white);border-right:1px solid #E5E8EA;position:fixed;top:var(--header);left:0;bottom:0;overflow-y:auto;padding-bottom:40px}
+
+.sb-overall{padding:16px 18px;border-bottom:1px solid #E5E8EA}
+.sb-overall-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--silver);margin-bottom:8px}
+.sb-prog-bar{background:#E5E8EA;border-radius:99px;height:5px;margin-bottom:5px;overflow:hidden}
+.sb-prog-fill{background:var(--red);height:100%;border-radius:99px;transition:width .4s;width:0%}
+.sb-prog-text{font-size:11px;color:var(--slate);font-weight:500}
+
+.sb-chapter{border-bottom:1px solid #E5E8EA}
+.sb-ch-header{padding:12px 18px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.sb-ch-header:hover{background:var(--ghost)}
+.sb-ch-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:all .2s}
+.sb-ch-info{flex:1;min-width:0}
+.sb-ch-title{font-size:13px;font-weight:600;color:var(--navy)}
+.sb-ch-progress{font-size:11px;color:var(--silver);margin-top:1px}
+.sb-ch-arrow{font-size:10px;color:var(--silver);transition:transform .2s}
+.sb-ch-body{display:none;padding:4px 0}
+.sb-ch-body.open{display:block}
+
+.sb-lesson{display:flex;align-items:flex-start;gap:9px;padding:8px 18px 8px 46px;cursor:pointer;border-left:3px solid transparent;transition:all .15s}
+.sb-lesson:hover{background:var(--ghost)}
+.sb-lesson.active{background:var(--red-pale);border-left-color:var(--red)}
+.sb-lesson.done .sb-l-icon{background:var(--green)}
+.sb-lesson.done .sb-l-icon svg{display:block}
+.sb-lesson.done .sb-l-num{display:none}
+.sb-l-icon{width:20px;height:20px;border-radius:50%;background:#E5E8EA;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--slate);flex-shrink:0;margin-top:1px}
+.sb-l-icon svg{display:none;width:10px;height:10px}
+.sb-lesson.active .sb-l-icon{background:var(--red);color:white}
+.sb-l-meta{flex:1}
+.sb-l-name{font-size:12px;font-weight:500;color:var(--navy-mid);line-height:1.4}
+.sb-lesson.active .sb-l-name{color:var(--red-dark);font-weight:600}
+.sb-l-type{font-size:10px;color:var(--silver);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;padding:40px 60px 100px;max-width:1100px}
+
+/* SECTIONS */
+.section{display:none}
+.section.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* LESSON HEADER */
+.lh{margin-bottom:28px;padding-bottom:18px;border-bottom:2px solid var(--red-light)}
+.lh-tag{display:inline-block;background:var(--red);color:white;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:4px;margin-bottom:10px}
+.lh h1{font-family:'DM Serif Display',serif;font-size:30px;color:var(--navy);line-height:1.25;margin-bottom:8px}
+.lh-intro{font-size:15px;color:var(--slate);line-height:1.65}
+
+/* CONTENT */
+.prose{font-size:15px;line-height:1.75;color:var(--navy-mid);margin-bottom:18px}
+.prose strong{color:var(--navy);font-weight:600}
+h2.sh{font-family:'DM Serif Display',serif;font-size:21px;color:var(--navy);margin:28px 0 12px}
+.ul{list-style:none;margin:10px 0 18px}
+.ul li{display:flex;gap:10px;padding:6px 0;font-size:14px;line-height:1.6;color:var(--navy-mid);border-bottom:1px solid rgba(0,0,0,.04)}
+.ul li:last-child{border-bottom:none}
+.ul li::before{content:"→";color:var(--red);font-weight:700;flex-shrink:0;margin-top:1px}
+
+.callout{border-left:4px solid var(--red);background:var(--red-pale);border-radius:0 8px 8px 0;padding:14px 18px;margin:18px 0}
+.callout.blue{border-left-color:var(--blue);background:var(--blue-light)}
+.callout.gray{border-left-color:var(--silver);background:var(--ghost)}
+.callout.green{border-left-color:var(--green);background:var(--green-light)}
+.callout.teal{border-left-color:var(--teal);background:var(--teal-light)}
+.callout.orange{border-left-color:var(--orange);background:var(--orange-light)}
+.ct{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--red);margin-bottom:5px}
+.callout.blue .ct{color:var(--blue)}
+.callout.gray .ct{color:var(--slate)}
+.callout.green .ct{color:var(--green)}
+.callout.teal .ct{color:var(--teal)}
+.callout.orange .ct{color:var(--orange)}
+.callout p{font-size:14px;line-height:1.65;color:var(--navy-mid)}
+
+table.ct{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+table.ct th{background:var(--red);color:white;padding:9px 12px;text-align:left;font-weight:600;font-size:13px}
+table.ct td{padding:11px 12px;border-bottom:1px solid #E5E8EA;vertical-align:top;line-height:1.5}
+table.ct tr:nth-child(even) td{background:var(--ghost)}
+table.ct td:first-child{font-weight:600;color:var(--red-dark)}
+
+/* VIDEO */
+.vid-block{background:var(--navy);border-radius:10px;overflow:hidden;margin:24px 0}
+.vid-block video{width:100%;display:block;border-radius:10px 10px 0 0}
+.vid-placeholder{aspect-ratio:16/9;background:linear-gradient(135deg,#1A252F 0%,#2C3E50 100%);display:flex;align-items:center;justify-content:center;border-radius:10px 10px 0 0}
+.vid-placeholder-inner{text-align:center;color:white}
+.vid-play{width:56px;height:56px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.vid-label{font-size:12px;color:var(--silver)}
+.vid-title{font-family:'DM Serif Display',serif;font-size:18px;color:white;margin-bottom:4px}
+.vid-meta{padding:12px 18px;display:flex;align-items:center;gap:10px;border-top:1px solid rgba(255,255,255,.08)}
+.vid-badge{background:rgba(192,57,43,.25);color:#F1948A;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 9px;border-radius:20px;border:1px solid rgba(192,57,43,.3)}
+.vid-info{font-size:12px;color:var(--silver)}
+.vid-note{margin-left:auto;font-size:11px;color:rgba(255,255,255,.3);font-style:italic}
+
+/* CHAPTER BANNER */
+.ch-banner{border-radius:10px;padding:28px 32px;margin-bottom:28px}
+.ch-banner-num{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:6px}
+.ch-banner h1{font-family:'DM Serif Display',serif;font-size:34px;color:white;margin-bottom:6px}
+.ch-banner p{font-size:15px;opacity:.8;color:white}
+
+/* QUIZ */
+.quiz-header{background:var(--navy);border-radius:10px;padding:22px 26px;margin-bottom:24px;color:white}
+.quiz-header h2{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:6px}
+.quiz-header p{font-size:13px;color:var(--silver);line-height:1.6}
+.qblock{background:white;border-radius:10px;padding:22px;margin-bottom:14px;border:2px solid #E5E8EA;transition:border-color .2s}
+.qblock.answered{border-color:var(--red-light)}
+.qblock.correct{border-color:var(--green);background:var(--green-light)}
+.qblock.wrong{border-color:var(--red);background:var(--red-pale)}
+.qnum{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--silver);margin-bottom:6px}
+.qtext{font-size:15px;font-weight:600;color:var(--navy);line-height:1.5;margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-radius:8px;border:1.5px solid #E5E8EA;cursor:pointer;transition:all .15s;background:white}
+.opt:hover{border-color:var(--red);background:var(--red-pale)}
+.opt.sel{border-color:var(--red);background:var(--red-pale)}
+.opt.sel .ol{background:var(--red);color:white}
+.opt.c{border-color:var(--green);background:var(--green-light);pointer-events:none}
+.opt.c .ol{background:var(--green);color:white}
+.opt.w{border-color:var(--red);background:var(--red-pale);pointer-events:none}
+.opt.w .ol{background:var(--red);color:white}
+.opt.dis{pointer-events:none;opacity:.45}
+.opt.dis.sel{opacity:1}
+.ol{width:24px;height:24px;border-radius:50%;background:#E5E8EA;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--slate);flex-shrink:0;transition:all .15s}
+.ot{font-size:14px;line-height:1.5;color:var(--navy-mid);padding-top:2px}
+.expl{display:none;margin-top:12px;padding:10px 14px;border-radius:6px;font-size:13px;line-height:1.6}
+.expl.show{display:block}
+.expl.c{background:var(--green-light);color:var(--green);border-left:3px solid var(--green)}
+.expl.w{background:var(--red-pale);color:var(--red-dark);border-left:3px solid var(--red)}
+.quiz-result{display:none;border-radius:10px;padding:26px;margin:22px 0;text-align:center}
+.quiz-result.show{display:block}
+.quiz-result.pass{background:var(--green-light);border:2px solid var(--green)}
+.quiz-result.fail{background:#FEF9E7;border:2px solid #F39C12}
+.ri{font-size:44px;margin-bottom:10px}
+.rt{font-family:'DM Serif Display',serif;font-size:24px;margin-bottom:6px}
+.quiz-result.pass .rt{color:var(--green)}
+.quiz-result.fail .rt{color:#B7770D}
+.rs{font-size:14px;color:var(--slate);line-height:1.6}
+
+/* FINAL CERT */
+.cert{border:3px solid var(--red);border-radius:12px;padding:48px;text-align:center;margin:20px 0;background:white}
+.cert-org{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--silver);margin-bottom:16px}
+.cert-title{font-family:'DM Serif Display',serif;font-size:36px;color:var(--red);margin-bottom:8px}
+.cert-sub{font-size:18px;color:var(--navy-mid);margin-bottom:24px}
+.cert-intro{font-size:14px;color:var(--slate);font-style:italic;margin-bottom:10px}
+.cert-name{font-family:'DM Serif Display',serif;font-size:30px;color:var(--navy);margin-bottom:10px}
+.cert-confirms{font-size:14px;color:var(--slate);font-style:italic;margin-bottom:24px}
+.cert-fields{font-size:15px;color:var(--navy-mid);margin-bottom:20px}
+.cert-legal{font-size:13px;color:var(--slate);margin-bottom:8px}
+.cert-issued{font-size:12px;color:var(--silver)}
+
+/* WELCOME */
+.welcome-hero{background:var(--navy);border-radius:12px;padding:40px;margin-bottom:28px;color:white}
+.welcome-hero h1{font-family:'DM Serif Display',serif;font-size:36px;margin-bottom:10px}
+.welcome-hero p{font-size:15px;color:var(--silver);line-height:1.7;max-width:680px}
+.ch-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.ch-card{border-radius:10px;padding:20px;color:white}
+.ch-card-num{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:6px}
+.ch-card-title{font-family:'DM Serif Display',serif;font-size:18px;margin-bottom:6px}
+.ch-card-meta{font-size:12px;opacity:.7}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;background:var(--red);color:white;border:none;border-radius:8px;padding:11px 22px;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn:hover{background:var(--red-dark);transform:translateY(-1px);box-shadow:0 4px 12px rgba(192,57,43,.3)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-sec{display:inline-flex;align-items:center;gap:7px;background:white;color:var(--navy-mid);border:1.5px solid #E5E8EA;border-radius:8px;padding:11px 22px;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-sec:hover{border-color:var(--red);color:var(--red)}
+
+.bottom-bar{display:flex;justify-content:space-between;align-items:center;margin-top:36px;padding-top:22px;border-top:1px solid #E5E8EA}
+.complete-wrap{display:flex;justify-content:flex-end;margin-top:36px;padding-top:22px;border-top:1px solid #E5E8EA}
+
+.comp-banner{display:none;background:var(--green);border-radius:10px;padding:18px 22px;margin-bottom:28px;align-items:center;gap:14px;color:white}
+.comp-banner.show{display:flex}
+.comp-banner h3{font-size:15px;font-weight:700;margin-bottom:2px}
+.comp-banner p{font-size:12px;opacity:.85}
+
+.sb-lesson.locked{opacity:.45;cursor:not-allowed}
+.sb-lesson.locked:hover{background:transparent}
+.sb-lesson.locked .sb-l-icon{background:#E5E8EA}
+.sb-lesson.locked .sb-l-name{color:var(--slate)}
+
+.lock-msg{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:white;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:500;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3);animation:slideUp .2s ease}
+.lock-msg.show{display:block}
+@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+  <span class="logo-text">DRC AI Literacy</span>
+  <div class="top-divider"></div>
+  <span class="course-name">Understanding AI: What It Is, How to Use It Well, and What the Rules Are</span>
+  <div class="top-progress">
+    <div class="top-progress-bar"><div class="top-progress-fill" id="topFill"></div></div>
+    <div class="top-progress-text"><span id="topDone">0</span> / 20 completed</div>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-overall">
+    <div class="sb-overall-label">Overall Progress</div>
+    <div class="sb-prog-bar"><div class="sb-prog-fill" id="sbFill"></div></div>
+    <div class="sb-prog-text" id="sbText">0 / 20 completed</div>
+  </div>
+
+  <!-- Welcome -->
+  <div style="border-bottom:1px solid #E5E8EA">
+    <div class="sb-lesson active" id="nav-welcome" onclick="goTo('welcome')" style="padding-left:18px">
+      <div class="sb-l-icon"><span class="sb-l-num">★</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div>
+      <div class="sb-l-meta"><div class="sb-l-name">Welcome</div><div class="sb-l-type">Introduction</div></div>
+    </div>
+  </div>
+
+  <!-- Chapter 1 -->
+  <div class="sb-chapter" id="ch1-group">
+    <div class="sb-ch-header" onclick="toggleChapter(1)">
+      <div class="sb-ch-icon" id="ch1-icon" style="background:#1A5276;color:white">1</div>
+      <div class="sb-ch-info">
+        <div class="sb-ch-title">What is AI?</div>
+        <div class="sb-ch-progress" id="ch1-prog">0 / 5</div>
+      </div>
+      <div class="sb-ch-arrow" id="ch1-arrow">▼</div>
+    </div>
+    <div class="sb-ch-body open" id="ch1-body">
+      <div class="sb-lesson" id="nav-c1l1" onclick="goTo('c1l1')"><div class="sb-l-icon"><span class="sb-l-num">1</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">A plain-English definition</div><div class="sb-l-type">Text · 1.1</div></div></div>
+      <div class="sb-lesson" id="nav-c1l2" onclick="goTo('c1l2')"><div class="sb-l-icon"><span class="sb-l-num">2</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">What AI is good at</div><div class="sb-l-type">Text · 1.2</div></div></div>
+      <div class="sb-lesson" id="nav-c1l3" onclick="goTo('c1l3')"><div class="sb-l-icon"><span class="sb-l-num">3</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">What AI is NOT good at</div><div class="sb-l-type">Text + Video · 1.3</div></div></div>
+      <div class="sb-lesson" id="nav-c1l4" onclick="goTo('c1l4')"><div class="sb-l-icon"><span class="sb-l-num">4</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">The human-in-the-loop principle</div><div class="sb-l-type">Text · 1.4</div></div></div>
+      <div class="sb-lesson" id="nav-c1q" onclick="goTo('c1q')"><div class="sb-l-icon"><span class="sb-l-num">✓</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Knowledge Check</div><div class="sb-l-type">Quiz · 4 questions</div></div></div>
+    </div>
+  </div>
+
+  <!-- Chapter 2 -->
+  <div class="sb-chapter" id="ch2-group">
+    <div class="sb-ch-header" onclick="toggleChapter(2)">
+      <div class="sb-ch-icon" id="ch2-icon" style="background:#1E8449;color:white">2</div>
+      <div class="sb-ch-info">
+        <div class="sb-ch-title">Ethics & Responsibility</div>
+        <div class="sb-ch-progress" id="ch2-prog">0 / 8</div>
+      </div>
+      <div class="sb-ch-arrow" id="ch2-arrow">▶</div>
+    </div>
+    <div class="sb-ch-body" id="ch2-body">
+      <div class="sb-lesson" id="nav-c2l1" onclick="goTo('c2l1')"><div class="sb-l-icon"><span class="sb-l-num">1</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Why ethics matters in humanitarian work</div><div class="sb-l-type">Text · 2.1</div></div></div>
+      <div class="sb-lesson" id="nav-c2l2" onclick="goTo('c2l2')"><div class="sb-l-icon"><span class="sb-l-num">2</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Five core ethical principles</div><div class="sb-l-type">Text · 2.2</div></div></div>
+      <div class="sb-lesson" id="nav-c2l3" onclick="goTo('c2l3')"><div class="sb-l-icon"><span class="sb-l-num">3</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Bias in AI</div><div class="sb-l-type">Text · 2.3</div></div></div>
+      <div class="sb-lesson" id="nav-c2l4" onclick="goTo('c2l4')"><div class="sb-l-icon"><span class="sb-l-num">4</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Data you must never use</div><div class="sb-l-type">Text · 2.4</div></div></div>
+      <div class="sb-lesson" id="nav-c2l5" onclick="goTo('c2l5')"><div class="sb-l-icon"><span class="sb-l-num">5</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">The disclosure principle</div><div class="sb-l-type">Text · 2.5</div></div></div>
+      <div class="sb-lesson" id="nav-c2l6" onclick="goTo('c2l6')"><div class="sb-l-icon"><span class="sb-l-num">6</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">The auto-complete risk</div><div class="sb-l-type">Text · 2.6</div></div></div>
+      <div class="sb-lesson" id="nav-c2l7" onclick="goTo('c2l7')"><div class="sb-l-icon"><span class="sb-l-num">7</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Beneficiary rights + Video</div><div class="sb-l-type">Text + Video · 2.7</div></div></div>
+      <div class="sb-lesson" id="nav-c2q" onclick="goTo('c2q')"><div class="sb-l-icon"><span class="sb-l-num">✓</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Knowledge Check</div><div class="sb-l-type">Quiz · 4 questions</div></div></div>
+    </div>
+  </div>
+
+  <!-- Chapter 3 -->
+  <div class="sb-chapter" id="ch3-group">
+    <div class="sb-ch-header" onclick="toggleChapter(3)">
+      <div class="sb-ch-icon" id="ch3-icon" style="background:#6C3483;color:white">3</div>
+      <div class="sb-ch-info">
+        <div class="sb-ch-title">The Legal Framework</div>
+        <div class="sb-ch-progress" id="ch3-prog">0 / 7</div>
+      </div>
+      <div class="sb-ch-arrow" id="ch3-arrow">▶</div>
+    </div>
+    <div class="sb-ch-body" id="ch3-body">
+      <div class="sb-lesson" id="nav-c3l1" onclick="goTo('c3l1')"><div class="sb-l-icon"><span class="sb-l-num">1</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">The EU AI Act</div><div class="sb-l-type">Text · 3.1</div></div></div>
+      <div class="sb-lesson" id="nav-c3l2" onclick="goTo('c3l2')"><div class="sb-l-icon"><span class="sb-l-num">2</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Article 4 — AI Literacy</div><div class="sb-l-type">Text · 3.2</div></div></div>
+      <div class="sb-lesson" id="nav-c3l3" onclick="goTo('c3l3')"><div class="sb-l-icon"><span class="sb-l-num">3</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Article 50 — Transparency + Video</div><div class="sb-l-type">Text + Video · 3.3</div></div></div>
+      <div class="sb-lesson" id="nav-c3l4" onclick="goTo('c3l4')"><div class="sb-l-icon"><span class="sb-l-num">4</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">High-risk AI systems</div><div class="sb-l-type">Text · 3.4</div></div></div>
+      <div class="sb-lesson" id="nav-c3l5" onclick="goTo('c3l5')"><div class="sb-l-icon"><span class="sb-l-num">5</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">GDPR and AI</div><div class="sb-l-type">Text · 3.5</div></div></div>
+      <div class="sb-lesson" id="nav-c3l6" onclick="goTo('c3l6')"><div class="sb-l-icon"><span class="sb-l-num">6</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">What DRC staff must do</div><div class="sb-l-type">Text · 3.6</div></div></div>
+      <div class="sb-lesson" id="nav-c3q" onclick="goTo('c3q')"><div class="sb-l-icon"><span class="sb-l-num">✓</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Knowledge Check</div><div class="sb-l-type">Quiz · 4 questions</div></div></div>
+    </div>
+  </div>
+
+  <!-- Final -->
+  <div style="border-top:1px solid #E5E8EA">
+    <div class="sb-lesson" id="nav-final" onclick="goTo('final')" style="padding-left:18px"><div class="sb-l-icon"><span class="sb-l-num">🏆</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Final Assessment</div><div class="sb-l-type">Quiz · 6 questions</div></div></div>
+    <div class="sb-lesson" id="nav-cert" onclick="goTo('cert')" style="padding-left:18px"><div class="sb-l-icon"><span class="sb-l-num">🎖</span><svg viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2"><polyline points="1,5 3.5,7.5 9,1.5"/></svg></div><div class="sb-l-meta"><div class="sb-l-name">Certificate</div><div class="sb-l-type">Completion</div></div></div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- WELCOME -->
+<div class="section active" id="s-welcome">
+  <div class="welcome-hero">
+    <h1>DRC AI Literacy Course</h1>
+    <p>Welcome. This mandatory course gives you everything you need to use AI tools confidently and responsibly at DRC — what AI is, how to use it ethically, and what European law requires. It takes approximately 15–20 minutes and ends with a certificate that documents your EU AI Act Article 4 compliance.</p>
+  </div>
+  <div class="ch-cards">
+    <div class="ch-card" style="background:#1A5276"><div class="ch-card-num">Chapter 1</div><div class="ch-card-title">What is AI?</div><div class="ch-card-meta">4 lessons · 1 video · Quiz</div></div>
+    <div class="ch-card" style="background:#1E8449"><div class="ch-card-num">Chapter 2</div><div class="ch-card-title">Ethics & Responsibility</div><div class="ch-card-meta">7 lessons · 1 video · Quiz</div></div>
+    <div class="ch-card" style="background:#6C3483"><div class="ch-card-num">Chapter 3</div><div class="ch-card-title">The Legal Framework</div><div class="ch-card-meta">6 lessons · 1 video · Quiz</div></div>
+  </div>
+  <div class="callout blue"><div class="ct">Why this matters now</div><p>Research in 2026 found that only <strong>9% of NGOs report full institutional readiness</strong> for governed AI adoption. This course is the GPS unit's initiative to address that gap — and to fulfil DRC's mandatory AI literacy requirement under EU AI Act Article 4.</p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('welcome')">Start the course <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C1L1 -->
+<div class="section" id="s-c1l1">
+  <div class="lh"><div class="lh-tag">Lesson 1.1</div><h1>A plain-English definition</h1><p class="lh-intro">Before rules and responsibilities, we need a shared understanding of what AI actually is — and what it isn't.</p></div>
+  <p class="prose"><strong>Artificial Intelligence (AI)</strong> refers to computer systems that can perform tasks which typically require human intelligence — understanding language, recognising patterns, generating text, or making predictions.</p>
+  <p class="prose">The AI tools most DRC staff encounter today are called <strong>Large Language Models, or LLMs</strong> — Claude, ChatGPT, Gemini, Microsoft Copilot. They are trained on enormous amounts of text and learned to generate fluent, coherent language in response to your inputs.</p>
+  <div class="callout"><div class="ct">In plain terms</div><p>You write something. The AI <strong>predicts</strong> what a useful response would look like — based on patterns learned during training. It is not thinking. It is not understanding. <strong>It is generating.</strong></p></div>
+  <h2 class="sh">How are LLMs trained?</h2>
+  <p class="prose">LLMs are trained on vast text datasets using a process that rewards generating accurate, coherent, contextually appropriate language. Through billions of examples, the model learns statistical patterns about which words and ideas tend to follow which others.</p>
+  <p class="prose">This is why LLMs can seem remarkably knowledgeable — they have "read" more text than any human could in a lifetime. But they have no real-world experience, no access to current information, and no ability to verify whether what they generate is actually true.</p>
+  <div class="callout gray"><div class="ct">A useful mental model</div><p>An LLM is like an extraordinarily well-read assistant who has absorbed enormous amounts of information but cannot verify facts, check their work against reality, or exercise genuine judgment. They are excellent at producing <em>plausible</em> text — not necessarily <em>accurate</em> text.</p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c1l1')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C1L2 -->
+<div class="section" id="s-c1l2">
+  <div class="lh"><div class="lh-tag">Lesson 1.2</div><h1>What AI is good at</h1><p class="lh-intro">AI tools are genuinely useful — but for a specific set of tasks. Knowing where they add real value helps you use them efficiently.</p></div>
+  <p class="prose">AI tools work best for tasks that are <strong>language-based, repetitive, or require drawing on broad knowledge:</strong></p>
+  <ul class="ul"><li>Drafting and editing text — emails, reports, summaries, policy documents</li><li>Synthesising large volumes of information — pulling key themes from many documents</li><li>Translation and language checking — identifying awkward phrasing, inconsistencies</li><li>Brainstorming — generating ideas, options, and frameworks quickly</li><li>Reformatting and restructuring — turning rough notes into structured outputs</li><li>Explaining complex concepts — breaking down technical or legal language</li></ul>
+  <div class="callout gray"><div class="ct">The pattern</div><p>AI excels at <strong>pattern recognition in language</strong>. It is poor at tasks requiring deep specialist expertise, verified facts, or fine-grained contextual judgment. The boundary between these two categories is where careful human oversight matters most.</p></div>
+  <h2 class="sh">Practical examples for DRC work</h2>
+  <table class="ct"><tr><th style="width:35%">Task</th><th>How AI helps</th></tr>
+  <tr><td>Multi-country report synthesis</td><td>Pull common themes from multiple field inputs, identify gaps, draft a coherent narrative</td></tr>
+  <tr><td>Donor report writing</td><td>Structure content, improve flow and clarity, ensure consistent tone across sections</td></tr>
+  <tr><td>Meeting notes</td><td>Turn rough notes into structured summaries with action points and owners</td></tr>
+  <tr><td>Policy document review</td><td>Identify logical gaps, inconsistencies, or unclear language in a draft</td></tr>
+  <tr><td>Translation quality check</td><td>Flag awkward phrasing, regional language variation, or inconsistencies</td></tr></table>
+  <div class="callout"><div class="ct">Remember</div><p>In every case above, AI produces a <strong>first draft or a starting point</strong>. Your expertise, contextual knowledge, and judgment make the output good. AI helps you work faster — it does not replace the work.</p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c1l2')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C1L3 -->
+<div class="section" id="s-c1l3">
+  <div class="lh"><div class="lh-tag">Lesson 1.3</div><h1>What AI is <em>not</em> good at</h1><p class="lh-intro">Understanding the limits of AI is just as important as knowing its capabilities. These are fundamental to using AI responsibly.</p></div>
+  <table class="ct"><tr><th style="width:28%">Limitation</th><th>What this means in practice</th></tr>
+  <tr><td>Hallucination</td><td>AI can generate false information confidently and fluently. It may invent statistics, citations, names, or events that don't exist. <strong>Always verify facts, numbers, and sources independently.</strong></td></tr>
+  <tr><td>No real-time knowledge</td><td>Most AI tools have a knowledge cutoff. They don't know what happened last week or month. Do not rely on AI for current events, recent policy changes, or live data.</td></tr>
+  <tr><td>No contextual judgment</td><td>AI cannot read the room. It doesn't know the political history between stakeholders, the sensitivity of a situation on the ground, or the implicit expectations of a donor. <strong>Your professional judgment is irreplaceable.</strong></td></tr>
+  <tr><td>No accountability</td><td>If an AI-assisted document contains an error, the responsibility lies with the person who used it — not the tool. You are always accountable for what you sign, send, or publish.</td></tr>
+  <tr><td>Automation bias</td><td>People have a well-documented tendency to trust machine-generated outputs over their own judgment — even when the AI is wrong. <strong>Be actively sceptical</strong>, especially when outputs confirm what you already believe.</td></tr></table>
+  <div class="callout"><div class="ct">On hallucination — a concrete example</div><p>If you ask an AI to cite sources for a claim, it may generate convincing-looking references — journal names, author names, volume numbers — that do not exist. This is not the AI "lying." It is generating statistically plausible text. The result looks exactly like a real citation. It may not be one. <strong>Always check independently.</strong></p></div>
+  <h2 class="sh">Video — What are tokens?</h2>
+  <p class="prose" style="margin-bottom:14px">A short explainer on how AI actually processes your words — and why this matters for understanding its limits.</p>
+  <div class="vid-block">
+    <video controls style="width:100%;display:block;border-radius:10px 10px 0 0"><source src="what_are_tokens.mp4" type="video/mp4">Your browser does not support the video tag.</video>
+    <div class="vid-meta"><span class="vid-badge">Video</span><span class="vid-info">~2 min · What are tokens? — produced with NotebookLM</span></div>
+  </div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c1l3')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C1L4 -->
+<div class="section" id="s-c1l4">
+  <div class="lh"><div class="lh-tag">Lesson 1.4</div><h1>The human-in-the-loop principle</h1><p class="lh-intro">Every major AI framework — the EU AI Act, UNHCR, ICRC, DRC's own MEAL guidance — converges on the same foundational principle.</p></div>
+  <div class="callout blue"><div class="ct">The human-in-the-loop principle</div><p>AI can assist, support, and accelerate. But <strong>decisions that affect people</strong> — about programmes, resources, beneficiaries, or staff — must involve meaningful human review before action is taken. AI is an input. <strong>You are the decision-maker.</strong></p></div>
+  <h2 class="sh">What does "meaningful human review" mean?</h2>
+  <ul class="ul"><li>Reading the AI output carefully and critically</li><li>Verifying any facts, statistics, or citations that matter</li><li>Applying your own expertise and contextual knowledge</li><li>Editing the output to ensure it is accurate, appropriate, and reflects your professional judgment</li><li>Taking responsibility for the final document as if you had written it yourself</li></ul>
+  <h2 class="sh">Human oversight as a legal obligation</h2>
+  <p class="prose">The EU AI Act Article 14 mandates human oversight for high-risk AI systems — particularly those affecting vulnerable populations. For DRC, which works with displaced people, asylum seekers, and conflict-affected communities, any AI tool used in contexts that affect beneficiaries must be subject to meaningful human review.</p>
+  <div class="callout"><div class="ct">The sector consensus</div><p>ICRC's AI policy states explicitly: <em>"The burden of decision-making, and the ensuing moral and legal culpability, rests permanently with the human operator and the institution. Accountability can never be delegated to an algorithmic system."</em></p></div>
+  <h2 class="sh">Chapter 1 summary</h2>
+  <table class="ct"><tr><th>Key takeaway</th><th>Why it matters</th></tr>
+  <tr><td>AI generates, it does not think</td><td>Outputs are statistically plausible — not necessarily accurate</td></tr>
+  <tr><td>Hallucination is real and common</td><td>Verify every fact, number, and citation independently</td></tr>
+  <tr><td>Automation bias is a documented risk</td><td>Actively question AI outputs, especially confident-sounding ones</td></tr>
+  <tr><td>Human oversight is non-negotiable</td><td>You are always accountable for what you produce</td></tr></table>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c1l4')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C1 QUIZ -->
+<div class="section" id="s-c1q">
+  <div class="quiz-header"><h2>Chapter 1 — Knowledge Check</h2><p>4 questions. Select all answers then click Submit. You need 3/4 to pass. If you don't pass, only the questions you got wrong will be shown again.</p></div>
+  <div id="c1q-questions">
+    <div class="qblock" id="c1q-b0"><div class="qnum">Question 1 of 4</div><div class="qtext">Which of the following best describes how a Large Language Model generates a response?</div><div class="opts"><div class="opt" onclick="selOpt('c1q',0,0)" id="c1q-0-0"><div class="ol">A</div><div class="ot">It searches the internet in real time to find the most accurate answer</div></div><div class="opt" onclick="selOpt('c1q',0,1)" id="c1q-0-1"><div class="ol">B</div><div class="ot">It generates text by predicting what a relevant response would look like based on patterns learned during training</div></div><div class="opt" onclick="selOpt('c1q',0,2)" id="c1q-0-2"><div class="ol">C</div><div class="ot">It accesses a database of verified facts and assembles them into sentences</div></div><div class="opt" onclick="selOpt('c1q',0,3)" id="c1q-0-3"><div class="ol">D</div><div class="ot">It asks expert systems to validate the information before responding</div></div></div><div class="expl" id="c1q-e0"></div></div>
+    <div class="qblock" id="c1q-b1"><div class="qnum">Question 2 of 4</div><div class="qtext">A colleague asks AI to find the latest donor funding figures for a country programme. What is the main risk?</div><div class="opts"><div class="opt" onclick="selOpt('c1q',1,0)" id="c1q-1-0"><div class="ol">A</div><div class="ot">The AI will refuse to answer questions about funding</div></div><div class="opt" onclick="selOpt('c1q',1,1)" id="c1q-1-1"><div class="ol">B</div><div class="ot">The AI might generate plausible-sounding but incorrect or outdated figures</div></div><div class="opt" onclick="selOpt('c1q',1,2)" id="c1q-1-2"><div class="ol">C</div><div class="ot">The AI will share this information publicly</div></div><div class="opt" onclick="selOpt('c1q',1,3)" id="c1q-1-3"><div class="ol">D</div><div class="ot">There is no risk — AI always cites its sources</div></div></div><div class="expl" id="c1q-e1"></div></div>
+    <div class="qblock" id="c1q-b2"><div class="qnum">Question 3 of 4</div><div class="qtext">Under the human-in-the-loop principle, which statement is correct?</div><div class="opts"><div class="opt" onclick="selOpt('c1q',2,0)" id="c1q-2-0"><div class="ol">A</div><div class="ot">AI tools can make final decisions about aid distribution if the output looks reasonable</div></div><div class="opt" onclick="selOpt('c1q',2,1)" id="c1q-2-1"><div class="ol">B</div><div class="ot">Human review is only needed for documents shared externally</div></div><div class="opt" onclick="selOpt('c1q',2,2)" id="c1q-2-2"><div class="ol">C</div><div class="ot">Any decision that affects people must involve meaningful human review before action is taken</div></div><div class="opt" onclick="selOpt('c1q',2,3)" id="c1q-2-3"><div class="ol">D</div><div class="ot">The human-in-the-loop principle only applies to high-risk AI systems</div></div></div><div class="expl" id="c1q-e2"></div></div>
+    <div class="qblock" id="c1q-b3"><div class="qnum">Question 4 of 4</div><div class="qtext">An AI tool produces a report section with three statistics and two citations. What should you do before including this in a donor report?</div><div class="opts"><div class="opt" onclick="selOpt('c1q',3,0)" id="c1q-3-0"><div class="ol">A</div><div class="ot">Use it as-is — the AI is trained on reliable sources</div></div><div class="opt" onclick="selOpt('c1q',3,1)" id="c1q-3-1"><div class="ol">B</div><div class="ot">Ask the AI to double-check itself</div></div><div class="opt" onclick="selOpt('c1q',3,2)" id="c1q-3-2"><div class="ol">C</div><div class="ot">Verify every statistic and citation independently from authoritative sources</div></div><div class="opt" onclick="selOpt('c1q',3,3)" id="c1q-3-3"><div class="ol">D</div><div class="ot">Add a disclaimer that the section was AI-generated and send it</div></div></div><div class="expl" id="c1q-e3"></div></div>
+  </div>
+  <div style="margin-top:24px;display:flex;gap:12px;align-items:center"><button class="btn" id="c1q-submit" onclick="submitQuiz('c1q')" disabled>Submit answers <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span id="c1q-count" style="font-size:13px;color:var(--slate)">0 of 4 answered</span></div>
+  <div class="quiz-result" id="c1q-result"><div class="ri" id="c1q-ri"></div><div class="rt" id="c1q-rt"></div><p class="rs" id="c1q-rs"></p><button class="btn" id="c1q-retry" onclick="retryQuiz('c1q',4)" style="display:none;margin-top:14px">Retry incorrect questions</button></div>
+  <div class="comp-banner" id="c1q-banner"><div style="font-size:28px">🎉</div><div><h3>Chapter 1 complete!</h3><p>Well done. Move on to Chapter 2 — Ethics & Responsibility.</p></div></div>
+</div>
+
+<!-- C2L1 -->
+<div class="section" id="s-c2l1">
+  <div class="ch-banner" style="background:linear-gradient(135deg,#1E8449,#145A32)"><div class="ch-banner-num">Chapter 2</div><h1>Ethics & Responsibility</h1><p>Using AI in a way that reflects DRC's values and the humanitarian Do No Harm principle.</p></div>
+  <div class="lh"><div class="lh-tag">Lesson 2.1</div><h1>Why ethics matters in humanitarian work</h1><p class="lh-intro">DRC works with people in some of the world's most vulnerable situations. The stakes of getting things wrong are not abstract.</p></div>
+  <p class="prose">DRC works with displaced populations, conflict-affected communities, and people navigating asylum processes. The stakes of getting things wrong are not abstract. They affect real lives.</p>
+  <p class="prose">The foundational principle across all major humanitarian AI frameworks — ICRC, UNHCR, NetHope — is the same: <strong>Do No Harm</strong>. Technology must never be deployed in a way that risks worsening the situation of the people DRC serves, or that subjects them to opaque automated systems without their knowledge or consent.</p>
+  <div class="callout green"><div class="ct">The Do No Harm principle</div><p>Before deploying or using any AI tool in your work, ask: could this cause harm to the people DRC serves — directly or indirectly? If the answer is uncertain, stop and seek guidance.</p></div>
+  <p class="prose">This does not mean DRC staff cannot use AI. It means they must use it thoughtfully. The ethical considerations below apply to all DRC staff, regardless of role or location.</p>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c2l1')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C2L2 -->
+<div class="section" id="s-c2l2">
+  <div class="lh"><div class="lh-tag">Lesson 2.2</div><h1>Five core ethical principles</h1><p class="lh-intro">These five principles apply to all DRC staff when using AI tools, regardless of role or location.</p></div>
+  <table class="ct"><tr><th style="width:28%">Principle</th><th>What it means</th></tr>
+  <tr><td>1. Human oversight</td><td>AI must not replace human judgment where decisions affect people's lives, safety, or dignity. A human must always review, validate, and take responsibility for AI-assisted outputs before they are acted upon.</td></tr>
+  <tr><td>2. Transparency</td><td>DRC staff must be honest about when AI has contributed to their work. Disclose AI use in external documents, donor reports, and communications — do not hide it behind human authorship.</td></tr>
+  <tr><td>3. Data protection</td><td>Personal data — especially sensitive data about beneficiaries, staff, or vulnerable populations — must never be entered into AI tools not covered by DRC's data agreements.</td></tr>
+  <tr><td>4. Non-discrimination</td><td>AI systems can reflect and amplify biases present in their training data. DRC staff should be alert to outputs that may disadvantage particular groups, reinforce stereotypes, or produce inequitable recommendations.</td></tr>
+  <tr><td>5. Accountability</td><td>Using AI does not transfer responsibility. If you use AI to draft a document, the document is yours. You are accountable for its content, accuracy, and consequences.</td></tr></table>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c2l2')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C2L3 -->
+<div class="section" id="s-c2l3">
+  <div class="lh"><div class="lh-tag">Lesson 2.3</div><h1>Bias in AI</h1><p class="lh-intro">AI models are trained on data that reflects the world as it is — including its inequalities, biases, and blind spots.</p></div>
+  <p class="prose">AI models can systematically disadvantage certain groups, languages, or regions — often without being obvious about it.</p>
+  <div class="callout gray"><div class="ct">Examples relevant to DRC's work</div><p>An AI tool trained predominantly on English-language data may produce lower-quality outputs in Arabic, Somali, or French. A model trained on Western datasets may reflect assumptions about household structure, gender roles, or risk that do not apply in DRC's operational contexts.</p></div>
+  <h2 class="sh">What to do</h2>
+  <ul class="ul"><li>Always apply your own expertise and contextual knowledge to AI outputs — especially when writing about specific populations or geographies</li><li>Be sceptical of AI outputs that seem to generalise or stereotype</li><li>When working in languages other than English, review outputs more carefully for errors, awkward phrasing, or cultural mismatches</li><li>If an AI output disadvantages or misrepresents a specific community, do not use it — rewrite it</li></ul>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c2l3')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C2L4 -->
+<div class="section" id="s-c2l4">
+  <div class="lh"><div class="lh-tag">Lesson 2.4</div><h1>Data you must never put into AI tools</h1><p class="lh-intro">The most important data protection rule for DRC staff using AI is straightforward.</p></div>
+  <div class="callout"><div class="ct">The core rule</div><p>Never enter data about identifiable individuals into an AI tool unless that tool is explicitly covered by a DRC data agreement.</p></div>
+  <p class="prose" style="margin-top:16px">This includes:</p>
+  <ul class="ul"><li>Named beneficiary information — case notes, registration data, vulnerability assessments</li><li>Biometric data of any kind</li><li>Safeguarding and protection case material</li><li>HR and staff personal data</li><li>Information about asylum seekers, refugees, or displaced persons that could identify them</li></ul>
+  <p class="prose">Why? AI tools process and may store inputs on external servers. Entering personal data about vulnerable individuals into an uncontrolled AI tool is a potential data breach — with serious consequences for those individuals and for DRC's legal and reputational standing.</p>
+  <div class="callout orange"><div class="ct">A simple test</div><p>Before pasting content into an AI tool, ask: <em>"Would I be comfortable if a colleague could read what I am about to paste?"</em> If the answer is no or uncertain — stop.</p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c2l4')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C2L5 -->
+<div class="section" id="s-c2l5">
+  <div class="lh"><div class="lh-tag">Lesson 2.5</div><h1>The disclosure principle</h1><p class="lh-intro">Transparency is a core humanitarian value. DRC staff are expected to be honest about how their work is produced.</p></div>
+  <p class="prose">When AI has contributed to content shared externally — with donors, partners, beneficiaries, or the public — it must be disclosed. This does not mean a lengthy disclaimer. A single clear line is enough:</p>
+  <div class="callout blue" style="text-align:center"><p><em>"This document was prepared with AI assistance and reviewed by [Name] on [Date]."</em></p></div>
+  <p class="prose">For internal documents, disclosure is not required — but honesty with colleagues about how work was produced remains a professional standard.</p>
+  <div class="callout green"><div class="ct">Disclosure templates</div><p>Ready-to-use disclosure statements for Word documents, PowerPoints, emails, donor reports, and meeting notes are available in the Safety Kit folder of the GPS AI Hub.</p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c2l5')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C2L6 -->
+<div class="section" id="s-c2l6">
+  <div class="lh"><div class="lh-tag">Lesson 2.6</div><h1>The auto-complete risk</h1><p class="lh-intro">One of the most frequently penalised AI-related risks identified by Denmark's Datatilsynet in 2026 is surprisingly mundane.</p></div>
+  <div class="callout"><div class="ct">What is the risk?</div><p>When writing case notes, emails, or registration records in software with auto-complete or predictive text enabled, AI can automatically suggest or insert sensitive data — sometimes from a different case or beneficiary — into the wrong field or document. Datatilsynet has recorded multiple serious data breaches caused exactly by this mechanism.</p></div>
+  <h2 class="sh">What to do</h2>
+  <ul class="ul"><li>Be aware of auto-complete in any system handling sensitive data — casework software, email, databases</li><li>Always review completed forms and documents before saving or sending</li><li>If your organisation's tools allow it, disable predictive text in fields containing sensitive personal information</li><li>Treat auto-complete suggestions as drafts to verify — not confirmations to accept</li></ul>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c2l6')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C2L7 -->
+<div class="section" id="s-c2l7">
+  <div class="lh"><div class="lh-tag">Lesson 2.7</div><h1>Beneficiary rights and the right to opt out</h1><p class="lh-intro">When AI systems are used in processes that affect beneficiaries, those individuals have rights that DRC must respect.</p></div>
+  <table class="ct"><tr><th style="width:28%">Right</th><th>What this means for DRC</th></tr>
+  <tr><td>Right to know</td><td>Beneficiaries must be informed when AI has been used in processes that affect them — registration, assessment, or service decisions.</td></tr>
+  <tr><td>Right to opt out</td><td>Beneficiaries must have the ability to opt out of automated processes and access a human alternative. This right cannot be conditional on receiving services.</td></tr>
+  <tr><td>Right to explanation</td><td>If an AI-assisted process influences a decision about a beneficiary, they have the right to understand how and why. Opaque algorithmic decisions are not compatible with DRC's accountability obligations.</td></tr></table>
+  <div class="callout"><div class="ct">Important</div><p>Displaced populations often cannot meaningfully refuse data collection if refusal means losing access to food, shelter, or legal protection. This dependency makes the obligation to respect their rights <strong>even more critical</strong> — not less.</p></div>
+  <h2 class="sh">Video — Energy & data ethics</h2>
+  <p class="prose" style="margin-bottom:14px">The hidden environmental and data ethics costs behind every AI response — and what this means for an organisation like DRC.</p>
+  <div class="vid-block">
+    <div class="vid-placeholder"><div class="vid-placeholder-inner"><div class="vid-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div><div class="vid-label">Chapter 2 · Video</div><div class="vid-title">Energy & data ethics</div></div></div>
+    <div class="vid-meta"><span class="vid-badge">Video</span><span class="vid-info">~2 min · Energy & data ethics — produced with NotebookLM</span><span class="vid-note">Video to be added</span></div>
+  </div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c2l7')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C2 QUIZ -->
+<div class="section" id="s-c2q">
+  <div class="quiz-header"><h2>Chapter 2 — Knowledge Check</h2><p>4 questions. Select all answers then click Submit. You need 3/4 to pass.</p></div>
+  <div id="c2q-questions">
+    <div class="qblock" id="c2q-b0"><div class="qnum">Question 1 of 4</div><div class="qtext">A DRC programme officer uses AI to draft a beneficiary vulnerability assessment using names and location data from a registration database. What is wrong with this?</div><div class="opts"><div class="opt" onclick="selOpt('c2q',0,0)" id="c2q-0-0"><div class="ol">A</div><div class="ot">Nothing — AI is faster and this will save time</div></div><div class="opt" onclick="selOpt('c2q',0,1)" id="c2q-0-1"><div class="ol">B</div><div class="ot">The document should be reviewed by a manager before use</div></div><div class="opt" onclick="selOpt('c2q',0,2)" id="c2q-0-2"><div class="ol">C</div><div class="ot">Named beneficiary data must never be entered into AI tools not covered by a DRC data agreement</div></div><div class="opt" onclick="selOpt('c2q',0,3)" id="c2q-0-3"><div class="ol">D</div><div class="ot">The officer should use a different AI tool</div></div></div><div class="expl" id="c2q-e0"></div></div>
+    <div class="qblock" id="c2q-b1"><div class="qnum">Question 2 of 4</div><div class="qtext">An AI tool produces a funding proposal section that sounds excellent. The author sends it directly to a donor without reviewing it. Which principles have been violated?</div><div class="opts"><div class="opt" onclick="selOpt('c2q',1,0)" id="c2q-1-0"><div class="ol">A</div><div class="ot">Transparency only — the author should have disclosed AI use</div></div><div class="opt" onclick="selOpt('c2q',1,1)" id="c2q-1-1"><div class="ol">B</div><div class="ot">Accountability only — the author is responsible for what they send</div></div><div class="opt" onclick="selOpt('c2q',1,2)" id="c2q-1-2"><div class="ol">C</div><div class="ot">Non-discrimination — the AI may have biased the content</div></div><div class="opt" onclick="selOpt('c2q',1,3)" id="c2q-1-3"><div class="ol">D</div><div class="ot">Both transparency and accountability — disclosure was missing and the content was not verified</div></div></div><div class="expl" id="c2q-e1"></div></div>
+    <div class="qblock" id="c2q-b2"><div class="qnum">Question 3 of 4</div><div class="qtext">An AI-generated summary of field reports from East Africa uses stereotyping language about a specific community. What does this most likely reflect?</div><div class="opts"><div class="opt" onclick="selOpt('c2q',2,0)" id="c2q-2-0"><div class="ol">A</div><div class="ot">A technical error that will be fixed in the next AI update</div></div><div class="opt" onclick="selOpt('c2q',2,1)" id="c2q-2-1"><div class="ol">B</div><div class="ot">Bias in the AI's training data, which can reproduce and amplify societal inequalities</div></div><div class="opt" onclick="selOpt('c2q',2,2)" id="c2q-2-2"><div class="ol">C</div><div class="ot">The AI has accessed incorrect sources</div></div><div class="opt" onclick="selOpt('c2q',2,3)" id="c2q-2-3"><div class="ol">D</div><div class="ot">The colleague is misreading the output</div></div></div><div class="expl" id="c2q-e2"></div></div>
+    <div class="qblock" id="c2q-b3"><div class="qnum">Question 4 of 4</div><div class="qtext">When must AI use be disclosed to external audiences?</div><div class="opts"><div class="opt" onclick="selOpt('c2q',3,0)" id="c2q-3-0"><div class="ol">A</div><div class="ot">Never — disclosure creates unnecessary confusion</div></div><div class="opt" onclick="selOpt('c2q',3,1)" id="c2q-3-1"><div class="ol">B</div><div class="ot">Only when more than 50% of the content was AI-generated</div></div><div class="opt" onclick="selOpt('c2q',3,2)" id="c2q-3-2"><div class="ol">C</div><div class="ot">When AI contributed to content shared with donors, partners, or the public</div></div><div class="opt" onclick="selOpt('c2q',3,3)" id="c2q-3-3"><div class="ol">D</div><div class="ot">Only for formal publications, not emails or reports</div></div></div><div class="expl" id="c2q-e3"></div></div>
+  </div>
+  <div style="margin-top:24px;display:flex;gap:12px;align-items:center"><button class="btn" id="c2q-submit" onclick="submitQuiz('c2q')" disabled>Submit answers <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span id="c2q-count" style="font-size:13px;color:var(--slate)">0 of 4 answered</span></div>
+  <div class="quiz-result" id="c2q-result"><div class="ri" id="c2q-ri"></div><div class="rt" id="c2q-rt"></div><p class="rs" id="c2q-rs"></p><button class="btn" id="c2q-retry" onclick="retryQuiz('c2q',4)" style="display:none;margin-top:14px">Retry incorrect questions</button></div>
+  <div class="comp-banner" id="c2q-banner"><div style="font-size:28px">🎉</div><div><h3>Chapter 2 complete!</h3><p>Well done. Move on to Chapter 3 — The Legal Framework.</p></div><button class="btn" onclick="goTo('c3l1')" style="margin-top:14px">Start Chapter 3 <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C3L1 -->
+<div class="section" id="s-c3l1">
+  <div class="ch-banner" style="background:linear-gradient(135deg,#6C3483,#4A235A)"><div class="ch-banner-num">Chapter 3</div><h1>The Legal Framework</h1><p>What the law requires — and what it means for DRC.</p></div>
+  <div class="lh"><div class="lh-tag">Lesson 3.1</div><h1>The EU AI Act</h1><p class="lh-intro">DRC is headquartered in Copenhagen, Denmark — within the European Union. The EU AI Act applies to DRC's operations.</p></div>
+  <p class="prose">The EU AI Act (Regulation (EU) 2024/1689) is the world's first comprehensive, binding legal framework for artificial intelligence. It entered into force on 1 August 2024, with obligations phasing in through 2027.</p>
+  <div class="callout blue"><div class="ct">What is the EU AI Act?</div><p>The Act establishes obligations for organisations that develop, deploy, or use AI systems — based on the level of risk those systems pose. For most DRC staff, the most directly relevant provisions are <strong>Article 4 (AI Literacy)</strong> and <strong>Article 50 (Transparency)</strong>.</p></div>
+  <h2 class="sh">Key enforcement timeline</h2>
+  <table class="ct"><tr><th>Date</th><th>What applies</th></tr>
+  <tr><td>February 2025</td><td>Prohibited AI practices + AI literacy obligation (Article 4) — <strong>already in force</strong></td></tr>
+  <tr><td>August 2025</td><td>General-purpose AI model obligations</td></tr>
+  <tr><td>August 2026</td><td>High-risk AI system requirements — <strong>3 months away</strong></td></tr>
+  <tr><td>August 2027</td><td>AI in regulated products (medical devices, vehicles)</td></tr></table>
+  <div class="callout"><div class="ct">Why this matters now</div><p>The Article 4 AI literacy obligation applies to DRC <strong>today</strong>. This course is the GPS unit's documented response to that obligation. Completing it is part of DRC's compliance evidence.</p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c3l1')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C3L2 -->
+<div class="section" id="s-c3l2">
+  <div class="lh"><div class="lh-tag">Lesson 3.2</div><h1>Article 4 — The AI Literacy Requirement</h1><p class="lh-intro">Article 4 requires organisations deploying AI to ensure their staff have sufficient AI literacy — proportionate to their role.</p></div>
+  <p class="prose">Article 4 establishes an affirmative obligation: organisations must <em>"take measures to ensure, to their best extent, a sufficient level of AI literacy of their staff and other persons dealing with the operation and use of AI systems on their behalf."</em></p>
+  <div class="callout gray"><div class="ct">What "sufficient literacy" means</div><p>The EU does not define a fixed curriculum. Sufficiency is judged against the risk level of AI systems used and the person's role. The European Commission identifies five core components:</p></div>
+  <ul class="ul"><li>Understanding what AI systems are and how they work at a basic level</li><li>Awareness of AI capabilities and limitations, including the risk of errors</li><li>Understanding the risks and potential harms of AI use</li><li>Ability to critically assess AI outputs</li><li>Awareness of applicable legal obligations</li></ul>
+  <div class="callout blue"><div class="ct">Danish supplementary law</div><p>Denmark enacted <strong>Lov nr 467 af 14/05/2025</strong> to operationalise the EU AI Act nationally. Under the Danish interpretation, "sufficient literacy" means the demonstrated ability to apply AI systems correctly within organisational guidelines — not just theoretical awareness.</p></div>
+  <p class="prose">This course covers all five components. Your completion is recorded as part of DRC's Article 4 compliance documentation.</p>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c3l2')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C3L3 -->
+<div class="section" id="s-c3l3">
+  <div class="lh"><div class="lh-tag">Lesson 3.3</div><h1>Article 50 — Transparency Obligations</h1><p class="lh-intro">Article 50 requires that AI-generated content published on matters of public interest must be labelled as such.</p></div>
+  <p class="prose">For DRC, this means external reports, proposals, donor communications, and publications with significant AI contribution must carry a disclosure statement.</p>
+  <div class="callout blue"><div class="ct">The editorial responsibility exemption</div><p>You do not need to disclose AI use if a named person holds formal editorial responsibility and has conducted a <strong>substantive human review</strong> of the content — meaning verifying factual accuracy, checking contextual nuance, and confirming alignment with DRC values. Important: the European Commission's May 2026 guidelines explicitly state that a superficial spell-check does not qualify. The review must be meaningful and documentable.</p></div>
+  <div class="callout"><div class="ct">The financial stakes</div><p>Violations of Article 50 transparency requirements carry fines of up to <strong>€15 million or 3% of DRC's total annual worldwide turnover</strong> — whichever is higher. When in doubt, disclose.</p></div>
+  <h2 class="sh">Video — Europe vs the world</h2>
+  <p class="prose" style="margin-bottom:14px">Why the EU has chosen a strict, rights-based approach to AI regulation — and how it compares to the US, China, and the rest of the world.</p>
+  <div class="vid-block">
+    <div class="vid-placeholder"><div class="vid-placeholder-inner"><div class="vid-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div><div class="vid-label">Chapter 3 · Video</div><div class="vid-title">AI regulation: Europe vs the world</div></div></div>
+    <div class="vid-meta"><span class="vid-badge">Video</span><span class="vid-info">~2 min · Europe vs the world — produced with NotebookLM</span><span class="vid-note">Video to be added</span></div>
+  </div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c3l3')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C3L4 -->
+<div class="section" id="s-c3l4">
+  <div class="lh"><div class="lh-tag">Lesson 3.4</div><h1>High-risk AI systems and DRC</h1><p class="lh-intro">The EU AI Act classifies AI systems by risk level. High-risk systems carry the most stringent obligations.</p></div>
+  <p class="prose">High-risk AI systems include those used in migration management, asylum processes, vulnerability assessments, and decisions about access to services.</p>
+  <div class="callout"><div class="ct">Why this matters for DRC</div><p>DRC works directly with displaced populations, asylum seekers, and conflict-affected communities. AI tools used in these contexts — even indirectly, through partner platforms — may fall into the high-risk category. UNHCR and NetHope recommend a precautionary approach: <strong>treat AI used in displacement-adjacent contexts as high-risk by default.</strong></p></div>
+  <h2 class="sh">High-risk obligations</h2>
+  <ul class="ul"><li>Human oversight mechanisms — a person must be able to intervene and override AI outputs</li><li>Data Protection Impact Assessments (DPIAs) — formal risk assessments before deploying AI with personal data</li><li>Logging and traceability — records of AI system use</li><li>Transparency to affected individuals — people have the right to know when AI has been used in decisions affecting them</li></ul>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c3l4')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C3L5 -->
+<div class="section" id="s-c3l5">
+  <div class="lh"><div class="lh-tag">Lesson 3.5</div><h1>GDPR and AI — the data protection layer</h1><p class="lh-intro">The EU AI Act operates alongside — not instead of — the General Data Protection Regulation (GDPR). For DRC, both apply simultaneously.</p></div>
+  <table class="ct"><tr><th style="width:50%">GDPR</th><th>EU AI Act</th></tr>
+  <tr><td>Governs how personal data is collected, processed, stored and shared</td><td>Governs how AI systems are developed, deployed and used</td></tr>
+  <tr><td>Requires a legal basis for processing personal data</td><td>Requires AI literacy, transparency, and human oversight</td></tr>
+  <tr><td>Applies to all personal data processing at DRC</td><td>Applies to all AI systems deployed or used at DRC</td></tr></table>
+  <div class="callout blue"><div class="ct">The practical consequence</div><p>When you use an AI tool with personal data, both GDPR and EU AI Act obligations are triggered simultaneously. This is why the data protection rules from Chapter 2 are not just ethical guidance — <strong>they are legal requirements.</strong></p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c3l5')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C3L6 -->
+<div class="section" id="s-c3l6">
+  <div class="lh"><div class="lh-tag">Lesson 3.6</div><h1>What DRC staff must do</h1><p class="lh-intro">Based on the legal framework, every DRC staff member who uses AI tools has the following obligations.</p></div>
+  <table class="ct"><tr><th style="width:60%">Obligation</th><th>Legal basis</th></tr>
+  <tr><td>Complete this AI literacy course and keep your certificate</td><td>Article 4, EU AI Act</td></tr>
+  <tr><td>Never enter sensitive personal data — especially beneficiary data — into AI tools not covered by a DRC data agreement</td><td>GDPR + EU AI Act</td></tr>
+  <tr><td>Always apply human review to AI outputs before sharing externally</td><td>Article 26 / human oversight principle</td></tr>
+  <tr><td>Disclose AI use in external documents</td><td>Article 50, EU AI Act</td></tr>
+  <tr><td>Ensure decisions affecting people remain under human control</td><td>High-risk system requirements</td></tr></table>
+  <div class="callout green"><div class="ct">Chapter 3 summary</div><p>The EU AI Act applies to DRC today. Article 4 (literacy) and Article 50 (transparency) are the most directly relevant provisions for most staff. The high-risk classification is particularly important for anyone working in programmes that affect beneficiaries. GDPR and the EU AI Act apply simultaneously.</p></div>
+  <div class="complete-wrap"><button class="btn" onclick="complete('c3l6')">Complete & Continue <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- C3 QUIZ -->
+<div class="section" id="s-c3q">
+  <div class="quiz-header"><h2>Chapter 3 — Knowledge Check</h2><p>4 questions. Select all answers then click Submit. You need 3/4 to pass.</p></div>
+  <div id="c3q-questions">
+    <div class="qblock" id="c3q-b0"><div class="qnum">Question 1 of 4</div><div class="qtext">Article 4 of the EU AI Act requires DRC to:</div><div class="opts"><div class="opt" onclick="selOpt('c3q',0,0)" id="c3q-0-0"><div class="ol">A</div><div class="ot">Ban all use of AI tools until full regulatory compliance is achieved</div></div><div class="opt" onclick="selOpt('c3q',0,1)" id="c3q-0-1"><div class="ol">B</div><div class="ot">Ensure that staff who use AI systems have a sufficient level of AI literacy</div></div><div class="opt" onclick="selOpt('c3q',0,2)" id="c3q-0-2"><div class="ol">C</div><div class="ot">Report all AI use to the Danish government on a quarterly basis</div></div><div class="opt" onclick="selOpt('c3q',0,3)" id="c3q-0-3"><div class="ol">D</div><div class="ot">Limit AI use to staff with technical backgrounds</div></div></div><div class="expl" id="c3q-e0"></div></div>
+    <div class="qblock" id="c3q-b1"><div class="qnum">Question 2 of 4</div><div class="qtext">Under Article 50, when must AI-generated content be disclosed?</div><div class="opts"><div class="opt" onclick="selOpt('c3q',1,0)" id="c3q-1-0"><div class="ol">A</div><div class="ot">Only when the content is entirely AI-written with no human editing</div></div><div class="opt" onclick="selOpt('c3q',1,1)" id="c3q-1-1"><div class="ol">B</div><div class="ot">When AI has contributed to content published on matters of public interest, unless subject to substantive human editorial review</div></div><div class="opt" onclick="selOpt('c3q',1,2)" id="c3q-1-2"><div class="ol">C</div><div class="ot">Only for content published on DRC's public website</div></div><div class="opt" onclick="selOpt('c3q',1,3)" id="c3q-1-3"><div class="ol">D</div><div class="ot">Article 50 does not apply to NGOs</div></div></div><div class="expl" id="c3q-e1"></div></div>
+    <div class="qblock" id="c3q-b2"><div class="qnum">Question 3 of 4</div><div class="qtext">GDPR and the EU AI Act:</div><div class="opts"><div class="opt" onclick="selOpt('c3q',2,0)" id="c3q-2-0"><div class="ol">A</div><div class="ot">Are alternatives — organisations choose which one applies to them</div></div><div class="opt" onclick="selOpt('c3q',2,1)" id="c3q-2-1"><div class="ol">B</div><div class="ot">Apply simultaneously — when personal data is processed by an AI tool, both sets of obligations are triggered</div></div><div class="opt" onclick="selOpt('c3q',2,2)" id="c3q-2-2"><div class="ol">C</div><div class="ot">The EU AI Act replaces GDPR for AI-related activities</div></div><div class="opt" onclick="selOpt('c3q',2,3)" id="c3q-2-3"><div class="ol">D</div><div class="ot">GDPR only applies to HR data, not programme data</div></div></div><div class="expl" id="c3q-e2"></div></div>
+    <div class="qblock" id="c3q-b3"><div class="qnum">Question 4 of 4</div><div class="qtext">Why does sector guidance recommend treating AI used in displacement contexts as high-risk by default?</div><div class="opts"><div class="opt" onclick="selOpt('c3q',3,0)" id="c3q-3-0"><div class="ol">A</div><div class="ot">Because AI tools are technically more complex in field environments</div></div><div class="opt" onclick="selOpt('c3q',3,1)" id="c3q-3-1"><div class="ol">B</div><div class="ot">Because high-risk classification always results in better AI performance</div></div><div class="opt" onclick="selOpt('c3q',3,2)" id="c3q-3-2"><div class="ol">C</div><div class="ot">Because AI used with displaced populations can affect decisions about their safety, access to services, and rights — and the regulatory boundary is still being clarified</div></div><div class="opt" onclick="selOpt('c3q',3,3)" id="c3q-3-3"><div class="ol">D</div><div class="ot">Because DRC's IT systems are not certified for standard-risk AI</div></div></div><div class="expl" id="c3q-e3"></div></div>
+  </div>
+  <div style="margin-top:24px;display:flex;gap:12px;align-items:center"><button class="btn" id="c3q-submit" onclick="submitQuiz('c3q')" disabled>Submit answers <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span id="c3q-count" style="font-size:13px;color:var(--slate)">0 of 4 answered</span></div>
+  <div class="quiz-result" id="c3q-result"><div class="ri" id="c3q-ri"></div><div class="rt" id="c3q-rt"></div><p class="rs" id="c3q-rs"></p><button class="btn" id="c3q-retry" onclick="retryQuiz('c3q',4)" style="display:none;margin-top:14px">Retry incorrect questions</button></div>
+  <div class="comp-banner" id="c3q-banner"><div style="font-size:28px">🎉</div><div><h3>Chapter 3 complete!</h3><p>All chapters done. Time for the final assessment.</p></div><button class="btn" onclick="goTo('final')" style="margin-top:14px">Start Final Assessment <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- FINAL ASSESSMENT -->
+<div class="section" id="s-final">
+  <div class="quiz-header" style="background:var(--navy-mid)"><h2>Final Assessment</h2><p>6 questions covering all three chapters. You need at least 5 out of 6 to pass and unlock your certificate. Same mechanic as before — select all, then submit.</p></div>
+  <div id="fq-questions">
+    <div class="qblock" id="fq-b0"><div class="qnum">Question 1 of 6</div><div class="qtext">An LLM generates text by:</div><div class="opts"><div class="opt" onclick="selOpt('fq',0,0)" id="fq-0-0"><div class="ol">A</div><div class="ot">Accessing a verified database of facts and assembling them accurately</div></div><div class="opt" onclick="selOpt('fq',0,1)" id="fq-0-1"><div class="ol">B</div><div class="ot">Predicting the most likely useful response based on patterns in training data</div></div><div class="opt" onclick="selOpt('fq',0,2)" id="fq-0-2"><div class="ol">C</div><div class="ot">Connecting in real time to authoritative online sources</div></div><div class="opt" onclick="selOpt('fq',0,3)" id="fq-0-3"><div class="ol">D</div><div class="ot">Applying logical reasoning rules programmed by engineers</div></div></div><div class="expl" id="fq-e0"></div></div>
+    <div class="qblock" id="fq-b1"><div class="qnum">Question 2 of 6</div><div class="qtext">A DRC colleague pastes a safeguarding case note into an AI tool to help draft a summary. This is:</div><div class="opts"><div class="opt" onclick="selOpt('fq',1,0)" id="fq-1-0"><div class="ol">A</div><div class="ot">Acceptable if the AI tool is free and widely used</div></div><div class="opt" onclick="selOpt('fq',1,1)" id="fq-1-1"><div class="ol">B</div><div class="ot">Acceptable if the colleague reviews the output carefully</div></div><div class="opt" onclick="selOpt('fq',1,2)" id="fq-1-2"><div class="ol">C</div><div class="ot">A serious breach of data protection — safeguarding material must never be entered into AI tools</div></div><div class="opt" onclick="selOpt('fq',1,3)" id="fq-1-3"><div class="ol">D</div><div class="ot">Acceptable if the beneficiary's name is removed</div></div></div><div class="expl" id="fq-e1"></div></div>
+    <div class="qblock" id="fq-b2"><div class="qnum">Question 3 of 6</div><div class="qtext">Which statement best reflects the accountability principle?</div><div class="opts"><div class="opt" onclick="selOpt('fq',2,0)" id="fq-2-0"><div class="ol">A</div><div class="ot">If AI produces an error in a document, responsibility lies with the AI provider</div></div><div class="opt" onclick="selOpt('fq',2,1)" id="fq-2-1"><div class="ol">B</div><div class="ot">You are accountable for all content you produce, sign, or send — including AI-assisted content</div></div><div class="opt" onclick="selOpt('fq',2,2)" id="fq-2-2"><div class="ol">C</div><div class="ot">AI-generated content should be marked so readers know who is responsible</div></div><div class="opt" onclick="selOpt('fq',2,3)" id="fq-2-3"><div class="ol">D</div><div class="ot">Accountability only applies when the document is shared externally</div></div></div><div class="expl" id="fq-e2"></div></div>
+    <div class="qblock" id="fq-b3"><div class="qnum">Question 4 of 6</div><div class="qtext">Article 4 of the EU AI Act applies to DRC because:</div><div class="opts"><div class="opt" onclick="selOpt('fq',3,0)" id="fq-3-0"><div class="ol">A</div><div class="ot">DRC has voluntarily opted into the EU AI Act</div></div><div class="opt" onclick="selOpt('fq',3,1)" id="fq-3-1"><div class="ol">B</div><div class="ot">DRC is headquartered in Denmark, within the EU, and deploys AI systems</div></div><div class="opt" onclick="selOpt('fq',3,2)" id="fq-3-2"><div class="ol">C</div><div class="ot">DRC receives EU funding</div></div><div class="opt" onclick="selOpt('fq',3,3)" id="fq-3-3"><div class="ol">D</div><div class="ot">Article 4 applies globally to all organisations using AI</div></div></div><div class="expl" id="fq-e3"></div></div>
+    <div class="qblock" id="fq-b4"><div class="qnum">Question 5 of 6</div><div class="qtext">A DRC officer uses AI to draft a field report that will be shared externally with partners. Which of the following is required before sending it?</div><div class="opts"><div class="opt" onclick="selOpt('fq',4,0)" id="fq-4-0"><div class="ol">A</div><div class="ot">Send it directly — AI produces accurate, culturally aware outputs</div></div><div class="opt" onclick="selOpt('fq',4,1)" id="fq-4-1"><div class="ol">B</div><div class="ot">Review it carefully for accuracy and bias, AND add a disclosure statement since AI contributed to external content</div></div><div class="opt" onclick="selOpt('fq',4,2)" id="fq-4-2"><div class="ol">C</div><div class="ot">Add a note that it was AI-generated and send it</div></div><div class="opt" onclick="selOpt('fq',4,3)" id="fq-4-3"><div class="ol">D</div><div class="ot">Only review statistics and citations — prose doesn't need checking</div></div></div><div class="expl" id="fq-e4"></div></div>
+    <div class="qblock" id="fq-b5"><div class="qnum">Question 6 of 6</div><div class="qtext">A DRC colleague sends a donor update primarily drafted using AI, without disclosing this. Which obligations have potentially been violated?</div><div class="opts"><div class="opt" onclick="selOpt('fq',5,0)" id="fq-5-0"><div class="ol">A</div><div class="ot">Article 50 (transparency) only</div></div><div class="opt" onclick="selOpt('fq',5,1)" id="fq-5-1"><div class="ol">B</div><div class="ot">Article 4 (literacy) only</div></div><div class="opt" onclick="selOpt('fq',5,2)" id="fq-5-2"><div class="ol">C</div><div class="ot">Article 50 (transparency) and the accountability principle</div></div><div class="opt" onclick="selOpt('fq',5,3)" id="fq-5-3"><div class="ol">D</div><div class="ot">No obligation — disclosure is only required for published reports</div></div></div><div class="expl" id="fq-e5"></div></div>
+  </div>
+  <div style="margin-top:24px;display:flex;gap:12px;align-items:center"><button class="btn" id="fq-submit" onclick="submitFinal()" disabled>Submit final assessment <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><span id="fq-count" style="font-size:13px;color:var(--slate)">0 of 6 answered</span></div>
+  <div class="quiz-result" id="fq-result"><div class="ri" id="fq-ri"></div><div class="rt" id="fq-rt"></div><p class="rs" id="fq-rs"></p><button class="btn" id="fq-retry" onclick="retryFinal()" style="display:none;margin-top:14px">Retry incorrect questions</button></div>
+  <div class="comp-banner" id="fq-banner"><div style="font-size:28px">🏆</div><div><h3>Assessment passed!</h3><p>Proceed to your certificate.</p></div><button class="btn" onclick="goTo('cert')" style="margin-top:14px">Get my certificate <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button></div>
+</div>
+
+<!-- CERTIFICATE -->
+<div class="section" id="s-cert">
+
+  <!-- Name input step -->
+  <div id="cert-step1">
+    <div class="quiz-header" style="background:var(--navy-mid)">
+      <h2>Almost there — one last step</h2>
+      <p>Enter your full name to generate your completion certificate and unique verification code.</p>
+    </div>
+    <div style="margin:24px 0;max-width:420px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px">Your full name</label>
+      <input id="cert-name-input" type="text" placeholder="e.g. Augustin Matjasec"
+        style="width:100%;padding:12px 16px;border:1.5px solid #E5E8EA;border-radius:8px;font-family:'Sora',sans-serif;font-size:15px;color:var(--navy);outline:none;transition:border-color .15s"
+        onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='#E5E8EA'"
+        onkeyup="toggleCertBtn()">
+    </div>
+    <button class="btn" id="cert-gen-btn" onclick="generateCert()" disabled>Generate my certificate <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+  </div>
+
+  <!-- Certificate -->
+  <div id="cert-step2" style="display:none">
+    <div class="cert">
+      <div class="cert-org">Danish Refugee Council</div>
+      <div class="cert-title">Certificate of Completion</div>
+      <div class="cert-sub">AI Literacy Course</div>
+      <div class="cert-intro">This certifies that</div>
+      <div class="cert-name" id="cert-display-name"></div>
+      <div class="cert-confirms">has successfully completed the DRC AI Literacy Course</div>
+      <div class="cert-fields" id="cert-display-fields"></div>
+      <div style="margin:20px 0;padding:14px;background:var(--ghost);border-radius:8px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--slate);margin-bottom:6px">Verification code</div>
+        <div id="cert-display-code" style="font-family:monospace;font-size:18px;font-weight:700;color:var(--navy);letter-spacing:.08em"></div>
+      </div>
+      <div class="cert-legal">This certificate satisfies the EU AI Act Article 4 AI Literacy requirement for this individual.</div>
+      <div class="cert-issued">Issued by: DRC GPS unit, HQ Copenhagen · 2026</div>
+    </div>
+
+    <div class="callout blue" style="margin-top:24px">
+      <div class="ct">Last step — notify your completion</div>
+      <p>Click the button below to open a pre-filled email to your GPS AI Hub managers. It contains your name, score, date, and verification code. Just hit <strong>Send</strong> — that's it. You'll receive official confirmation from Raphael or Augustin once they've logged your completion.</p>
+    </div>
+
+    <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn" id="notify-btn" onclick="sendNotification()">
+        📧 Notify my completion
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+      </button>
+      <button class="btn-sec" onclick="window.print()">🖨 Print certificate</button>
+    </div>
+
+    <div class="comp-banner show" style="margin-top:24px">
+      <div style="font-size:28px">🎉</div>
+      <div>
+        <h3>Course complete!</h3>
+        <p>Well done. Send the notification email and keep a copy of your verification code.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</main>
+</div>
+
+<div class="lock-msg" id="lockMsg"></div>
+
+<script>
+// ── DATA ──
+const SECTIONS = ['welcome','c1l1','c1l2','c1l3','c1l4','c1q','c2l1','c2l2','c2l3','c2l4','c2l5','c2l6','c2l7','c2q','c3l1','c3l2','c3l3','c3l4','c3l5','c3l6','c3q','final','cert'];
+const TOTAL = 20;
+let completed = {};
+let passed = {};
+let current = 'welcome';
+const CH_LESSONS = { 1:['c1l1','c1l2','c1l3','c1l4','c1q'], 2:['c2l1','c2l2','c2l3','c2l4','c2l5','c2l6','c2l7','c2q'], 3:['c3l1','c3l2','c3l3','c3l4','c3l5','c3l6','c3q'] };
+const CH1 = ['c1l1','c1l2','c1l3','c1l4'];
+const CH2 = ['c2l1','c2l2','c2l3','c2l4','c2l5','c2l6','c2l7'];
+const CH3 = ['c3l1','c3l2','c3l3','c3l4','c3l5','c3l6'];
+const QUIZZES = {
+  c1q:{correct:[1,1,2,2],pass:3,expl:["LLMs predict text based on patterns from training data — they do not search the internet or verify facts.","AI has knowledge cutoffs and can hallucinate statistics. Funding figures must always be verified from official DRC sources.","The human-in-the-loop principle applies to all AI use affecting people — not just external documents or high-risk systems.","AI can hallucinate citations convincingly. Every statistic and citation must be independently verified before external use."]},
+  c2q:{correct:[2,3,1,2],pass:3,expl:["Named beneficiary data is sensitive personal data. Entering it into an external AI tool is a potential data breach regardless of purpose.","Both transparency (no disclosure) and accountability (unverified content sent to donor) have been violated.","AI reflects biases in its training data. Stereotyping language about communities is a known risk requiring critical human review.","Disclosure is required whenever AI contributes to externally shared content — regardless of proportion."]},
+  c3q:{correct:[1,1,1,2],pass:3,expl:["Article 4 establishes an AI literacy obligation — not a ban. DRC must ensure sufficient literacy proportionate to each person's role.","Article 50 applies to content published on matters of public interest. Disclosure is required when AI contributed, regardless of editing.","Both frameworks apply simultaneously. Using AI with personal data triggers GDPR and EU AI Act obligations at the same time.","AI in displacement contexts touches decisions affecting vulnerable people's lives. UNHCR and NetHope recommend a precautionary position."]}
+};
+const FINAL = {
+  correct:[1,2,1,1,1,2],pass:5,
+  expl:["LLMs predict text based on statistical patterns from training data — not databases or live sources.","Safeguarding material is among the most sensitive personal data categories. It must never be entered into any external AI tool.","Accountability does not transfer to an AI tool. You are always responsible for what you produce.","The EU AI Act applies to organisations that deploy AI systems within the EU. DRC, headquartered in Copenhagen, falls within scope.","Both human review (for accuracy and bias) AND disclosure are required for AI-assisted content shared externally. Neither step alone is sufficient.","Donor-facing communications are external documents. Article 50 transparency obligations apply, and the accountability principle is also at stake."]
+};
+let qState = {};
+['c1q','c2q','c3q','fq'].forEach(id=>{ qState[id]={answers:new Array(id==='fq'?6:4).fill(null),submitted:false,retryMode:false,wrong:[]}; });
+
+// ── GATING ──
+function isLocked(id) {
+  if(['welcome','c1l1','c1l2','c1l3','c1l4'].includes(id)) return false;
+  if(id==='c1q') return !CH1.every(l=>completed[l]);
+  if(CH2.includes(id)) return !passed['c1q'];
+  if(id==='c2q') return !passed['c1q']||!CH2.every(l=>completed[l]);
+  if(CH3.includes(id)) return !passed['c2q'];
+  if(id==='c3q') return !passed['c2q']||!CH3.every(l=>completed[l]);
+  if(id==='final') return !passed['c1q']||!passed['c2q']||!passed['c3q'];
+  if(id==='cert') return !passed['fq'];
+  return false;
+}
+function lockMsg(id) {
+  if(id==='c1q') return '🔒 Complete all Chapter 1 lessons first';
+  if(CH2.includes(id)||id==='c2q') return '🔒 Pass the Chapter 1 quiz to unlock Chapter 2';
+  if(CH3.includes(id)||id==='c3q') return '🔒 Pass the Chapter 2 quiz to unlock Chapter 3';
+  if(id==='final') return '🔒 Pass all three chapter quizzes to unlock the Final Assessment';
+  if(id==='cert') return '🔒 Pass the Final Assessment to unlock your certificate';
+  return null;
+}
+function showLock(msg) {
+  const el=document.getElementById('lockMsg'); el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2500);
+}
+function updateLocks() {
+  SECTIONS.forEach(id=>{ const n=document.getElementById('nav-'+id); if(!n)return; isLocked(id)?n.classList.add('locked'):n.classList.remove('locked'); });
+}
+
+// ── NAVIGATION ──
+function goTo(id) {
+  if(isLocked(id)){ const m=lockMsg(id); if(m)showLock(m); return; }
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-lesson').forEach(l=>l.classList.remove('active'));
+  const sec=document.getElementById('s-'+id), nav=document.getElementById('nav-'+id);
+  if(sec)sec.classList.add('active'); if(nav)nav.classList.add('active');
+  current=id; window.scrollTo(0,0);
+  if(id.startsWith('c1'))openChapter(1); else if(id.startsWith('c2'))openChapter(2); else if(id.startsWith('c3'))openChapter(3);
+}
+function complete(id) {
+  completed[id]=true;
+  const nav=document.getElementById('nav-'+id); if(nav){nav.classList.add('done');nav.classList.remove('locked');}
+  updateProgress(); updateLocks();
+  const idx=SECTIONS.indexOf(id); if(idx<SECTIONS.length-1)goTo(SECTIONS[idx+1]);
+}
+function toggleChapter(n) {
+  const b=document.getElementById('ch'+n+'-body'),a=document.getElementById('ch'+n+'-arrow'),o=b.classList.contains('open');
+  b.classList.toggle('open',!o); a.textContent=o?'▶':'▼';
+}
+function openChapter(n) { document.getElementById('ch'+n+'-body').classList.add('open'); document.getElementById('ch'+n+'-arrow').textContent='▼'; }
+function updateProgress() {
+  const done=Object.keys(completed).filter(k=>k!=='welcome'&&k!=='cert').length, pct=Math.round((done/TOTAL)*100);
+  document.getElementById('topFill').style.width=pct+'%'; document.getElementById('topDone').textContent=done;
+  document.getElementById('sbFill').style.width=pct+'%'; document.getElementById('sbText').textContent=done+' / '+TOTAL+' completed';
+  [1,2,3].forEach(n=>{ const cd=CH_LESSONS[n].filter(l=>completed[l]).length; document.getElementById('ch'+n+'-prog').textContent=cd+' / '+CH_LESSONS[n].length; });
+}
+
+// ── QUIZ ENGINE ──
+function selOpt(qid,qi,oi) {
+  const s=qState[qid]; if(s.submitted&&!s.retryMode)return; if(s.retryMode&&!s.wrong.includes(qi))return;
+  const total=qid==='fq'?6:4; if(!s.answers||s.answers.length!==total)s.answers=new Array(total).fill(null);
+  for(let i=0;i<4;i++){const el=document.getElementById(qid+'-'+qi+'-'+i);if(el)el.classList.remove('sel');}
+  document.getElementById(qid+'-'+qi+'-'+oi).classList.add('sel'); s.answers[qi]=oi; updateCount(qid);
+}
+function updateCount(qid) {
+  const s=qState[qid],total=qid==='fq'?6:4,active=s.retryMode?s.wrong:[...Array(total).keys()];
+  const ans=active.filter(i=>s.answers[i]!==null).length;
+  document.getElementById(qid+'-count').textContent=ans+' of '+active.length+' answered';
+  document.getElementById(qid+'-submit').disabled=ans<active.length;
+}
+function runQuiz(qid,data,total) {
+  const s=qState[qid],active=s.retryMode?s.wrong:[...Array(total).keys()];
+  let correct=0; const nw=[];
+  active.forEach(qi=>{
+    const isC=s.answers[qi]===data.correct[qi];
+    for(let i=0;i<4;i++){const el=document.getElementById(qid+'-'+qi+'-'+i);if(!el)return;el.classList.remove('sel','dis');el.classList.add('dis');if(i===data.correct[qi])el.classList.add('c');else if(i===s.answers[qi]&&!isC)el.classList.add('w');}
+    const exp=document.getElementById(qid+'-e'+qi);exp.textContent=(isC?'✓ Correct. ':'✗ Incorrect. ')+data.expl[qi];exp.className='expl show '+(isC?'c':'w');
+    if(isC)correct++; else nw.push(qi);
+  });
+  const tot=s.retryMode?([...Array(total).keys()].filter(i=>!s.wrong.includes(i)||s.answers[i]===data.correct[i])).length:correct;
+  s.submitted=true; s.wrong=nw;
+  const allRight=nw.length===0;
+  const res=document.getElementById(qid+'-result');
+  if(allRight){
+    res.className='quiz-result show pass';
+    document.getElementById(qid+'-ri').textContent=total===6?'🏆':'✅';
+    document.getElementById(qid+'-rt').textContent=total===6?'Assessment complete!':'Chapter complete!';
+    document.getElementById(qid+'-rs').textContent=`You got ${tot}/${total} correct. Well done!`;
+    document.getElementById(qid+'-retry').style.display='none';
+    passed[qid]=true; completed[qid]=true;
+    if(qid==='fq') finalScore=tot;
+    const nav=document.getElementById('nav-'+qid); if(nav){nav.classList.add('done');nav.classList.remove('locked');}
+    updateProgress(); updateLocks();
+    setTimeout(()=>{ const b=document.getElementById(qid+'-banner'); if(b)b.classList.add('show'); },400);
+  } else {
+    res.className='quiz-result show fail';
+    document.getElementById(qid+'-ri').textContent='📝';
+    document.getElementById(qid+'-rt').textContent=`${tot}/${total} correct`;
+    document.getElementById(qid+'-rs').textContent=`You got ${correct} right out of ${active.length}. ${nw.length} answer${nw.length>1?'s need':'needs'} correcting — they're shown below. Have another go!`;
+    document.getElementById(qid+'-retry').style.display='inline-flex';
+  }
+}
+function submitQuiz(qid){ runQuiz(qid,QUIZZES[qid],4); }
+function submitFinal(){ runQuiz('fq',FINAL,6); }
+function retryQuiz(qid,total) {
+  const s=qState[qid]; s.retryMode=true; s.submitted=false;
+  document.getElementById(qid+'-result').className='quiz-result';
+  document.getElementById(qid+'-submit').textContent='Resubmit answers';
+  document.getElementById(qid+'-submit').disabled=true;
+  [...Array(total).keys()].forEach(qi=>{
+    const bl=document.getElementById(qid+'-b'+qi);
+    if(s.wrong.includes(qi)){
+      bl.style.display='block'; bl.className='qblock'; s.answers[qi]=null;
+      for(let i=0;i<4;i++){const el=document.getElementById(qid+'-'+qi+'-'+i);if(el){el.className='opt';(function(q,o){el.onclick=()=>selOpt(qid,q,o);})(qi,i);}}
+      document.getElementById(qid+'-e'+qi).className='expl';
+    } else bl.style.display='none';
+  });
+  document.getElementById(qid+'-count').textContent='0 of '+s.wrong.length+' answered';
+}
+function retryFinal(){ retryQuiz('fq',6); }
+
+
+// ── CERTIFICATE & CODE ──
+let finalScore = 0;
+
+function toggleCertBtn() {
+  const name = document.getElementById('cert-name-input').value.trim();
+  document.getElementById('cert-gen-btn').disabled = name.length < 2;
+}
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function generateCert() {
+  const name = document.getElementById('cert-name-input').value.trim();
+  const today = new Date();
+  const date = today.toISOString().slice(0,10);
+  const dateDisplay = today.toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'});
+  const score = finalScore + '/6';
+  const raw = name.toLowerCase() + '-' + score + '-' + date + '-flamingo';
+  const hash = await sha256(raw);
+  const code = 'DRC-AIL-' + hash.slice(0,4).toUpperCase() + '-' + hash.slice(4,8).toUpperCase();
+
+  document.getElementById('cert-display-name').textContent = name;
+  document.getElementById('cert-display-fields').textContent = 'Date: ' + dateDisplay + '     Score: ' + score;
+  document.getElementById('cert-display-code').textContent = code;
+
+  // Store for mailto
+  window._certData = { name, date, dateDisplay, score, code };
+
+  document.getElementById('cert-step1').style.display = 'none';
+  document.getElementById('cert-step2').style.display = 'block';
+}
+
+function sendNotification() {
+  const d = window._certData;
+  if(!d) return;
+  const subject = encodeURIComponent('DRC AI Literacy Course — Completion: ' + d.name);
+  const body = encodeURIComponent(
+    'Hi Augustin and Raphael,\n\n' +
+    'I have completed the DRC AI Literacy Course.\n\n' +
+    'Name: ' + d.name + '\n' +
+    'Date: ' + d.dateDisplay + '\n' +
+    'Score: ' + d.score + '\n' +
+    'Verification code: ' + d.code + '\n\n' +
+    'Please add me to the Article 4 compliance register.\n\n' +
+    'Thank you.'
+  );
+  window.location.href = 'mailto:augustin.matjasec@drc.ngo?subject=' + subject + '&body=' + body;
+}
+
+
+</script>
+</body>
+</html>
